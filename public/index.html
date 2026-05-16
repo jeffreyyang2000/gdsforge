@@ -1,0 +1,1774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Brightfound LLC — IC Layout Engineering Services</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=DM+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:       #0B1628;
+  --bg2:      #0F1E35;
+  --bg3:      #162038;
+  --card:     #131E32;
+  --card2:    #1A2740;
+
+  /* IC layer palette — 8-metal stack */
+  --poly:   #E05547;   /* Poly  — red        */
+  --active: #4CAF50;   /* OD    — green       */
+  --m1:     #4488FF;   /* M1    — blue        */
+  --m2:     #FF44AA;   /* M2    — magenta     */
+  --m3:     #FFB800;   /* M3    — amber/gold  */
+  --m4:     #00CCDD;   /* M4    — cyan        */
+  --m5:     #FF6600;   /* M5    — orange      */
+  --m6:     #88DD00;   /* M6    — lime        */
+  --m7:     #AA44FF;   /* M7    — violet      */
+  --m8:     #FF5533;   /* M8    — coral/top   */
+  --via:    #EDD25A;   /* Via   — amber       */
+  --nwell:  #5DC872;   /* NWell — green       */
+
+  --accent:   var(--m1);
+  --accent2:  var(--active);
+
+  --text:     #D8E4F4;
+  --muted:    #7A8FAE;
+  --border:   rgba(91,153,232,0.15);
+  --border2:  rgba(91,153,232,0.08);
+
+  --ff-head:  'Playfair Display',Georgia,serif;
+  --ff-body:  'DM Sans',sans-serif;
+  --ff-mono:  'IBM Plex Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--ff-body);
+  font-size:16px;
+  line-height:1.7;
+  overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
+
+/* ═══ NAV ════════════════════════════════════════════════ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 clamp(1.5rem,5vw,3.5rem);height:64px;
+  background:rgba(11,22,40,0.92);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  transition:background .3s;
+}
+.logo-wrap{
+  display:flex;align-items:center;gap:.65rem;
+  text-decoration:none;
+}
+.logo-text{
+  font-family:var(--ff-head);font-size:1.1rem;font-weight:700;
+  letter-spacing:-.02em;color:var(--text);line-height:1;
+}
+.logo-text em{font-style:normal;color:var(--m1)}
+.logo-llc{
+  font-family:var(--ff-mono);font-size:.6rem;font-weight:400;
+  letter-spacing:.12em;color:var(--muted);vertical-align:middle;
+  margin-left:.1rem;
+}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{
+  font-size:.78rem;font-weight:500;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);transition:color .2s
+}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{
+  font-size:.75rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  padding:.5rem 1.3rem;border:1.5px solid var(--m1);color:var(--m1);
+  border-radius:2px;transition:background .2s,color .2s
+}
+.nav-cta:hover{background:var(--m1);color:var(--bg)}
+@media(max-width:640px){.nav-links{display:none}}
+
+/* ═══ HERO ════════════════════════════════════════════════ */
+#hero{
+  min-height:100vh;padding-top:64px;
+  display:grid;grid-template-columns:1fr 1fr;
+  align-items:center;
+  gap:0;
+}
+@media(max-width:900px){
+  #hero{grid-template-columns:1fr;min-height:auto}
+  .hero-viewport{display:none}
+}
+
+.hero-text{
+  padding:clamp(3rem,8vh,6rem) clamp(1.5rem,5vw,3.5rem)
+           clamp(3rem,8vh,6rem) clamp(1.5rem,8vw,5rem);
+  position:relative;z-index:1;
+}
+.hero-eyebrow{
+  font-family:var(--ff-mono);font-size:.7rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--active);
+  display:flex;align-items:center;gap:.75rem;margin-bottom:1.8rem;
+  opacity:0;animation:fadeUp .7s .1s forwards
+}
+.hero-eyebrow::before{content:'';width:24px;height:1.5px;background:var(--active)}
+
+h1{
+  font-family:var(--ff-head);
+  font-size:clamp(2.6rem,4.5vw,4.2rem);
+  font-weight:700;line-height:1.1;letter-spacing:-.03em;
+  margin-bottom:1.5rem;
+  opacity:0;animation:fadeUp .8s .25s forwards
+}
+h1 em{font-style:italic;color:var(--m1)}
+
+.hero-desc{
+  font-size:1.05rem;font-weight:300;color:var(--muted);
+  line-height:1.8;max-width:480px;margin-bottom:2.5rem;
+  opacity:0;animation:fadeUp .8s .4s forwards
+}
+.hero-btns{
+  display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:3.5rem;
+  opacity:0;animation:fadeUp .8s .55s forwards
+}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.8rem 1.8rem;background:var(--m1);color:var(--bg);
+  font-weight:600;font-size:.88rem;letter-spacing:.03em;
+  border-radius:2px;transition:opacity .2s,transform .2s
+}
+.btn-primary:hover{opacity:.85;transform:translateY(-1px)}
+.btn-outline{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.8rem 1.8rem;border:1.5px solid var(--border);color:var(--muted);
+  font-size:.88rem;border-radius:2px;transition:border-color .2s,color .2s
+}
+.btn-outline:hover{border-color:rgba(91,153,232,.5);color:var(--text)}
+
+.hero-stats{
+  display:flex;gap:2.5rem;flex-wrap:wrap;
+  opacity:0;animation:fadeUp .8s .7s forwards
+}
+.stat-val{
+  font-family:var(--ff-head);font-size:2.2rem;font-weight:700;line-height:1;
+  color:var(--text)
+}
+.stat-val sup{color:var(--m1);font-size:1.2rem}
+.stat-key{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:.3rem}
+
+/* ─── GDS Viewer ──────────────────────────────────────── */
+.hero-viewport{
+  height:100vh;position:relative;
+  display:flex;align-items:center;justify-content:center;
+  padding:5rem 3rem 5rem 1rem;
+  opacity:0;animation:fadeIn 1.2s .6s forwards
+}
+
+.gds-window{
+  width:100%;max-width:520px;
+  background:#060C16;
+  border:1.5px solid rgba(91,153,232,.3);
+  border-radius:6px;
+  overflow:hidden;
+  box-shadow:0 0 60px rgba(91,153,232,.08), 0 40px 80px rgba(0,0,0,.6);
+}
+.gds-titlebar{
+  background:#0D1827;
+  border-bottom:1px solid rgba(91,153,232,.2);
+  padding:.6rem 1rem;
+  display:flex;align-items:center;gap:.75rem;
+}
+.gds-dots{display:flex;gap:.45rem}
+.gds-dots span{width:10px;height:10px;border-radius:50%}
+.gds-dots span:nth-child(1){background:#E05547}
+.gds-dots span:nth-child(2){background:#EDD25A}
+.gds-dots span:nth-child(3){background:#5DC872}
+.gds-title{
+  font-family:var(--ff-mono);font-size:.68rem;color:var(--muted);
+  letter-spacing:.06em;margin-left:.25rem
+}
+.gds-body{
+  padding:1px;
+  position:relative;aspect-ratio:4/3;
+}
+.gds-body canvas{display:block;width:100%;height:100%}
+
+/* layer legend under viewport */
+.layer-legend{
+  display:flex;flex-wrap:wrap;gap:.8rem 1.5rem;
+  margin-top:1.2rem;padding:0 .5rem;
+}
+.ll-item{
+  display:flex;align-items:center;gap:.45rem;
+  font-family:var(--ff-mono);font-size:.62rem;letter-spacing:.06em;color:var(--muted)
+}
+.ll-dot{width:8px;height:8px;border-radius:1px;flex-shrink:0}
+
+/* ═══ SECTION BASE ════════════════════════════════════════ */
+section{position:relative;padding:clamp(4rem,8vw,7rem) clamp(1.5rem,8vw,5rem)}
+.sec-label{
+  font-family:var(--ff-mono);font-size:.68rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:.6rem
+}
+.sec-label::before{content:'// ';color:var(--active)}
+h2{
+  font-family:var(--ff-head);
+  font-size:clamp(1.9rem,3.5vw,2.8rem);
+  font-weight:700;letter-spacing:-.025em;line-height:1.15;
+  margin-bottom:.75rem
+}
+h2 em{font-style:italic;color:var(--m1)}
+.sec-intro{color:var(--muted);max-width:520px;font-size:1rem;margin-bottom:3rem;line-height:1.8}
+.divider{border:none;border-top:1px solid var(--border2);margin:0}
+
+/* ═══ SERVICES ════════════════════════════════════════════ */
+#services{background:var(--bg2)}
+.svc-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:1.5px;background:var(--border);
+  border:1.5px solid var(--border);margin-top:.5rem
+}
+.svc-card{
+  background:var(--card);padding:2.2rem 2rem;
+  position:relative;overflow:hidden;transition:background .3s
+}
+.svc-card:hover{background:var(--card2)}
+.svc-stripe{
+  position:absolute;top:0;left:0;right:0;height:3px;
+}
+.svc-icon-box{
+  width:52px;height:52px;margin-bottom:1.4rem;
+  border:1px solid var(--border);border-radius:3px;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--bg3)
+}
+.svc-icon-box svg{width:30px;height:30px}
+.svc-card h3{font-family:var(--ff-head);font-size:1.25rem;font-weight:600;margin-bottom:.65rem;letter-spacing:-.01em}
+.svc-card p{font-size:.9rem;color:var(--muted);line-height:1.75}
+.tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:1.3rem}
+.tag{
+  font-family:var(--ff-mono);font-size:.63rem;letter-spacing:.04em;
+  padding:.22rem .6rem;border:1px solid var(--border);color:var(--muted);border-radius:1px
+}
+
+/* ═══ NODES ═══════════════════════════════════════════════ */
+#nodes{background:var(--bg)}
+.nodes-layout{display:grid;grid-template-columns:1fr 1.1fr;gap:5rem;align-items:center}
+@media(max-width:800px){.nodes-layout{grid-template-columns:1fr;gap:3rem}}
+
+.node-list{display:flex;flex-direction:column;gap:.55rem;margin-top:2rem}
+.node-row{
+  display:grid;grid-template-columns:70px 1fr 80px;
+  align-items:center;gap:1rem;
+  padding:.7rem 1rem;border-radius:2px;
+  border:1px solid transparent;transition:border-color .2s,background .2s
+}
+.node-row:hover{border-color:var(--border);background:var(--bg2)}
+.node-nm{font-family:var(--ff-mono);font-size:.85rem;font-weight:500;color:var(--text)}
+.node-track{height:3px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden}
+.node-fill{height:100%;border-radius:2px;transform:scaleX(0);transform-origin:left;transition:transform 1s cubic-bezier(.16,1,.3,1)}
+.node-fill.on{transform:scaleX(1)}
+.node-type{font-size:.68rem;color:var(--muted);text-align:right;white-space:nowrap}
+
+.foundries-block{margin-top:2.5rem}
+.foundries-label{font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:.8rem}
+.foundries-wrap{display:flex;flex-wrap:wrap;gap:.6rem}
+.foundry{
+  font-family:var(--ff-mono);font-size:.72rem;letter-spacing:.05em;
+  padding:.35rem .9rem;border:1px solid var(--border);color:var(--muted);border-radius:1px
+}
+
+/* right column: inline chip floorplan SVG */
+.nodes-visual{
+  border:1.5px solid var(--border);border-radius:4px;
+  overflow:hidden;background:#060C16;
+}
+.nodes-visual-title{
+  background:#0D1827;border-bottom:1px solid rgba(91,153,232,.2);
+  padding:.55rem 1rem;
+  font-family:var(--ff-mono);font-size:.65rem;color:var(--muted);letter-spacing:.08em
+}
+.nodes-visual svg{display:block;width:100%;height:auto}
+
+/* ═══ WHY ══════════════════════════════════════════════════ */
+#why{background:var(--bg2)}
+.why-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:1.5px;background:var(--border);
+  border:1.5px solid var(--border)
+}
+.why-card{background:var(--card);padding:2rem;transition:background .3s}
+.why-card:hover{background:var(--card2)}
+.why-num{font-family:var(--ff-mono);font-size:.65rem;letter-spacing:.15em;color:var(--m1);margin-bottom:1rem}
+.why-card h3{font-size:1rem;font-weight:600;margin-bottom:.5rem;letter-spacing:-.01em}
+.why-card p{font-size:.88rem;color:var(--muted);line-height:1.7}
+
+/* ═══ PROCESS ══════════════════════════════════════════════ */
+#process{background:var(--bg)}
+.steps-row{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:0;position:relative;margin-top:3rem
+}
+@media(max-width:700px){.steps-row{grid-template-columns:1fr 1fr}}
+.step{padding:0 1.5rem 2rem;text-align:center;position:relative}
+.step::after{
+  content:'';position:absolute;top:28px;right:0;width:50%;height:1px;
+  background:var(--border)
+}
+.step:last-child::after{display:none}
+.step-circle{
+  width:56px;height:56px;border-radius:50%;
+  background:var(--bg2);border:1.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 1.4rem;
+  font-family:var(--ff-mono);font-size:.8rem;color:var(--active);letter-spacing:.05em;
+  transition:border-color .3s,background .3s
+}
+.step:hover .step-circle{border-color:var(--active);background:rgba(61,214,195,.06)}
+.step h4{font-size:.95rem;font-weight:600;margin-bottom:.4rem;letter-spacing:-.01em}
+.step p{font-size:.82rem;color:var(--muted);line-height:1.65}
+
+/* ═══ CHALLENGE ════════════════════════════════════════════ */
+#challenge{background:var(--bg3)}
+.challenge-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;
+  margin-top:3rem
+}
+@media(max-width:800px){.challenge-grid{grid-template-columns:1fr;gap:2.5rem}}
+.challenge-item{
+  display:flex;gap:1.2rem;padding:1.8rem;
+  border:1px solid var(--border2);border-radius:3px;
+  background:var(--card);transition:border-color .25s,background .25s
+}
+.challenge-item:hover{border-color:var(--border);background:var(--card2)}
+.challenge-icon{
+  flex-shrink:0;width:40px;height:40px;
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;
+}
+.challenge-body h4{font-size:.95rem;font-weight:600;margin-bottom:.4rem;letter-spacing:-.01em}
+.challenge-body p{font-size:.85rem;color:var(--muted);line-height:1.7}
+
+/* ═══ FAQ ════════════════════════════════════════════════ */
+#faq{background:var(--bg2)}
+.faq-list{display:flex;flex-direction:column;gap:.75rem;margin-top:3rem;max-width:820px}
+.faq-item{
+  border:1px solid var(--border2);border-radius:3px;overflow:hidden;
+  transition:border-color .25s
+}
+.faq-item.open{border-color:rgba(91,153,232,.3)}
+.faq-q{
+  width:100%;display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;padding:1.2rem 1.5rem;
+  background:var(--card);border:none;cursor:pointer;text-align:left;
+  font-family:var(--ff-body);font-size:.95rem;font-weight:500;
+  color:var(--text);transition:background .2s
+}
+.faq-q:hover{background:var(--card2)}
+.faq-icon{
+  flex-shrink:0;width:22px;height:22px;border-radius:50%;
+  border:1.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--muted);font-size:1rem;line-height:1;
+  transition:transform .3s,border-color .3s,color .3s
+}
+.faq-item.open .faq-icon{transform:rotate(45deg);border-color:var(--m2);color:var(--m2)}
+.faq-a{
+  max-height:0;overflow:hidden;
+  transition:max-height .35s cubic-bezier(.4,0,.2,1),padding .35s
+}
+.faq-a-inner{
+  padding:0 1.5rem 1.3rem;
+  font-size:.88rem;color:var(--muted);line-height:1.8
+}
+.faq-item.open .faq-a{max-height:400px}
+
+/* ═══ COMPLIANCE STRIP ══════════════════════════════════════ */
+.compliance-strip{
+  background:var(--bg2);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:2rem clamp(1.5rem,8vw,5rem);
+  display:flex;align-items:center;gap:2rem;flex-wrap:wrap
+}
+.comp-badge{
+  font-family:var(--ff-mono);font-size:.68rem;letter-spacing:.1em;
+  text-transform:uppercase;padding:.4rem 1rem;
+  border:1px solid;border-radius:2px;white-space:nowrap;flex-shrink:0
+}
+.comp-badge.green{border-color:var(--nwell);color:var(--nwell)}
+.comp-badge.blue{border-color:var(--m2);color:var(--m2)}
+.comp-badge.gold{border-color:var(--m1);color:var(--m1)}
+.comp-text{font-size:.85rem;color:var(--muted);line-height:1.7;max-width:600px}
+
+/* ═══ CONTACT ══════════════════════════════════════════════ */
+#contact{background:var(--bg)}
+.contact-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:5rem;align-items:start}
+@media(max-width:800px){.contact-grid{grid-template-columns:1fr;gap:3rem}}
+.contact-info p{color:var(--muted);margin:1rem 0 2rem;line-height:1.8}
+.contact-email-link{
+  font-family:var(--ff-mono);font-size:.9rem;color:var(--m1);
+  display:inline-flex;align-items:center;gap:.75rem;margin-bottom:2.5rem
+}
+.contact-email-link::before{content:'';width:20px;height:1.5px;background:var(--m1)}
+
+form{display:flex;flex-direction:column;gap:1.1rem}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:600px){.frow{grid-template-columns:1fr}}
+.fgroup{display:flex;flex-direction:column;gap:.35rem}
+label{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+input,select,textarea{
+  background:var(--card);border:1px solid var(--border);
+  color:var(--text);font-family:var(--ff-body);font-size:.93rem;
+  padding:.7rem .95rem;border-radius:2px;outline:none;
+  transition:border-color .2s;width:100%
+}
+input:focus,select:focus,textarea:focus{border-color:rgba(91,153,232,.5)}
+textarea{resize:vertical;min-height:110px}
+select{appearance:none}
+.btn-submit{
+  align-self:flex-start;
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.85rem 1.8rem;background:var(--m1);color:var(--bg);
+  font-weight:600;font-size:.88rem;letter-spacing:.03em;
+  border:none;border-radius:2px;cursor:pointer;transition:opacity .2s
+}
+.btn-submit:hover{opacity:.85}
+
+/* ═══ FOOTER ═══════════════════════════════════════════════ */
+footer{
+  background:var(--bg2);border-top:1px solid var(--border);
+  padding:2rem clamp(1.5rem,8vw,5rem);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem
+}
+.footer-logo{font-family:var(--ff-head);font-size:1rem;font-weight:700}
+.footer-logo span{color:var(--m1)}
+footer p{font-size:.75rem;color:var(--muted)}
+.footer-mono{font-family:var(--ff-mono);font-size:.65rem;color:var(--muted);letter-spacing:.08em}
+
+/* ═══ ANIMATIONS ════════════════════════════════════════════ */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .65s ease,transform .65s ease}
+.reveal.on{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="logo-wrap">
+    <!-- IC-layer mark: 4 offset rectangles suggesting stacked metal layers -->
+    <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+      <!-- n-well outer hint -->
+      <rect x="1" y="7" width="20" height="20" rx="1" stroke="#3DD6C3" stroke-width="1" opacity="0.45"/>
+      <!-- poly layer — bottom-left anchor -->
+      <rect x="3"  y="15" width="14" height="10" fill="#E05547" opacity="0.85"/>
+      <!-- active layer — offset right -->
+      <rect x="9"  y="10" width="14" height="10" fill="#3DD6C3" opacity="0.75"/>
+      <!-- metal-1 — offset up-right -->
+      <rect x="15" y="5"  width="14" height="10" fill="#D4974E" opacity="0.90"/>
+      <!-- metal-2 top bar — creates implied "B" counter shape -->
+      <rect x="15" y="17" width="14" height="6"  fill="#5B99E8" opacity="0.80"/>
+      <!-- via dots -->
+      <rect x="13" y="13" width="3" height="3" fill="#EDD25A" opacity="0.9"/>
+      <rect x="19" y="8"  width="3" height="3" fill="#EDD25A" opacity="0.9"/>
+    </svg>
+    <span class="logo-text">Bright<em>found</em> <span class="logo-llc">LLC</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#nodes">Technology</a></li>
+    <li><a href="#why">Why Us</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Request a Quote</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+
+  <!-- Left: text -->
+  <div class="hero-text">
+    <p class="hero-eyebrow">IC Layout Engineering Services</p>
+    <h1>Precision layout.<br><em>Engineered</em><br>for scale.</h1>
+    <p class="hero-desc">
+      Analog, mixed-signal, and digital backend layout for 28nm and above.
+      A US-registered company — your contract counterpart is always a US entity.
+    </p>
+    <div class="hero-btns">
+      <a href="#contact" class="btn-primary">
+        Request a Quote
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+      <a href="#services" class="btn-outline">View Services</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="stat-val">22<sup>yr</sup></div><div class="stat-key">Max Experience</div></div>
+      <div><div class="stat-val">40<sup>%</sup></div><div class="stat-key">Cost Advantage</div></div>
+      <div><div class="stat-val">28<sup>nm+</sup></div><div class="stat-key">Node Coverage</div></div>
+      <div><div class="stat-val">US<sup> LLC</sup></div><div class="stat-key">Your Counterpart</div></div>
+    </div>
+  </div>
+
+  <!-- Right: GDS viewer window -->
+  <div class="hero-viewport">
+    <div style="width:100%;max-width:500px">
+      <div class="gds-window">
+        <div class="gds-titlebar">
+          <div class="gds-dots">
+            <span></span><span></span><span></span>
+          </div>
+          <span class="gds-title">layout_top.gds — Virtuoso Layout Editor</span>
+        </div>
+        <div class="gds-body">
+          <canvas id="gds-canvas"></canvas>
+        </div>
+      </div>
+      <div class="layer-legend" style="margin-top:1rem">
+        <div class="ll-item"><div class="ll-dot" style="background:var(--poly)"></div>Poly</div>
+        <div class="ll-item"><div class="ll-dot" style="background:var(--active)"></div>OD</div>
+        <div class="ll-item"><div class="ll-dot" style="background:var(--m1)"></div>M1</div>
+        <div class="ll-item"><div class="ll-dot" style="background:var(--m2)"></div>M2</div>
+        <div class="ll-item"><div class="ll-dot" style="background:var(--m3)"></div>M3</div>
+        <div class="ll-item"><div class="ll-dot" style="background:var(--m4)"></div>M4</div>
+        <div class="ll-item"><div class="ll-dot" style="background:var(--m5)"></div>M5</div>
+        <div class="ll-item"><div class="ll-dot" style="background:var(--m6)"></div>M6</div>
+        <div class="ll-item"><div class="ll-dot" style="background:var(--m7)"></div>M7</div>
+        <div class="ll-item"><div class="ll-dot" style="background:var(--m8)"></div>M8</div>
+        <div class="ll-item"><div class="ll-dot" style="background:var(--via)"></div>Via</div>
+        <div class="ll-item"><div class="ll-dot" style="background:var(--nwell)"></div>N-Well</div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<hr class="divider"/>
+
+<!-- SERVICES -->
+<section id="services">
+  <p class="sec-label reveal">What we do</p>
+  <h2 class="reveal">Layout services from<br><em>device to die</em></h2>
+  <p class="sec-intro reveal">Full-spectrum IC layout, delivered as flexible contract resources working under your technical direction inside your VDI environment.</p>
+  <div class="svc-grid reveal">
+
+    <div class="svc-card">
+      <div class="svc-stripe" style="background:var(--poly)"></div>
+      <div class="svc-icon-box">
+        <svg viewBox="0 0 30 30" fill="none">
+          <rect x="2" y="18" width="6" height="10" fill="var(--poly)" opacity=".9"/>
+          <rect x="10" y="12" width="6" height="16" fill="var(--active)" opacity=".9"/>
+          <rect x="18" y="6" width="6" height="22" fill="var(--m1)" opacity=".9"/>
+          <rect x="26" y="10" width="2" height="18" fill="var(--m2)" opacity=".9"/>
+        </svg>
+      </div>
+      <h3>Analog &amp; Mixed-Signal</h3>
+      <p>Full-custom layout with deep expertise in device matching, noise isolation, electromigration-aware routing, and DRC/LVS clean delivery.</p>
+      <div class="tags">
+        <span class="tag">PMIC</span><span class="tag">LDO / BGR</span>
+        <span class="tag">OTA / Amp</span><span class="tag">ADC / DAC</span>
+        <span class="tag">PLL / VCO</span><span class="tag">Sensor Readout</span>
+      </div>
+    </div>
+
+    <div class="svc-card">
+      <div class="svc-stripe" style="background:var(--m2)"></div>
+      <div class="svc-icon-box">
+        <svg viewBox="0 0 30 30" fill="none">
+          <rect x="2"  y="2"  width="12" height="8"  fill="var(--m2)" opacity=".9"/>
+          <rect x="16" y="2"  width="12" height="14" fill="var(--m3)" opacity=".9"/>
+          <rect x="2"  y="12" width="6"  height="16" fill="var(--poly)" opacity=".9"/>
+          <rect x="10" y="18" width="18" height="10" fill="var(--m1)" opacity=".9"/>
+          <rect x="10" y="12" width="6"  height="4"  fill="var(--active)" opacity=".9"/>
+        </svg>
+      </div>
+      <h3>Digital Backend</h3>
+      <p>Floorplanning, place and route, clock tree synthesis, timing closure, and physical verification for digital and mixed blocks at mature nodes.</p>
+      <div class="tags">
+        <span class="tag">Floorplan</span><span class="tag">P&amp;R</span>
+        <span class="tag">CTS</span><span class="tag">Timing Closure</span>
+        <span class="tag">DRC / LVS</span><span class="tag">ECO</span>
+      </div>
+    </div>
+
+    <div class="svc-card">
+      <div class="svc-stripe" style="background:var(--m3)"></div>
+      <div class="svc-icon-box">
+        <svg viewBox="0 0 30 30" fill="none">
+          <rect x="2"  y="2"  width="26" height="26" rx="1" stroke="var(--m3)" stroke-width="1.5" fill="none"/>
+          <rect x="5"  y="5"  width="9"  height="9"  fill="var(--m1)" opacity=".85"/>
+          <rect x="16" y="5"  width="9"  height="9"  fill="var(--m2)" opacity=".85"/>
+          <rect x="5"  y="16" width="9"  height="9"  fill="var(--poly)" opacity=".85"/>
+          <rect x="16" y="16" width="9"  height="9"  fill="var(--active)" opacity=".85"/>
+          <line x1="14" y1="2" x2="14" y2="28" stroke="var(--via)" stroke-width="1" opacity=".5"/>
+          <line x1="2"  y1="14" x2="28" y2="14" stroke="var(--via)" stroke-width="1" opacity=".5"/>
+        </svg>
+      </div>
+      <h3>Full-Chip Integration</h3>
+      <p>Top-level assembly, power network design, IO ring integration, and tape-out preparation — delivered DRC and LVS clean.</p>
+      <div class="tags">
+        <span class="tag">Top-Level Assembly</span><span class="tag">Power Grid</span>
+        <span class="tag">IO Ring</span><span class="tag">Tape-out Support</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- NODES -->
+<section id="nodes">
+  <div class="nodes-layout">
+    <div>
+      <p class="sec-label reveal">Technology coverage</p>
+      <h2 class="reveal">Mature node<br><em>specialists</em></h2>
+      <p class="sec-intro reveal" style="margin-bottom:1.5rem">
+        We operate exclusively at 28nm and above — the sweet spot for analog, mixed-signal, and cost-efficient digital designs.
+      </p>
+      <div class="node-list reveal" id="nodeList">
+        <div class="node-row">
+          <span class="node-nm">28nm</span>
+          <div class="node-track"><div class="node-fill" style="background:var(--m2);width:95%"></div></div>
+          <span class="node-type">LP / HPC</span>
+        </div>
+        <div class="node-row">
+          <span class="node-nm">40nm</span>
+          <div class="node-track"><div class="node-fill" style="background:var(--m1);width:90%"></div></div>
+          <span class="node-type">LP / G</span>
+        </div>
+        <div class="node-row">
+          <span class="node-nm">65nm</span>
+          <div class="node-track"><div class="node-fill" style="background:var(--active);width:85%"></div></div>
+          <span class="node-type">LP / G</span>
+        </div>
+        <div class="node-row">
+          <span class="node-nm">90nm</span>
+          <div class="node-track"><div class="node-fill" style="background:var(--poly);width:78%"></div></div>
+          <span class="node-type">General</span>
+        </div>
+        <div class="node-row">
+          <span class="node-nm">130nm</span>
+          <div class="node-track"><div class="node-fill" style="background:var(--m3);width:72%"></div></div>
+          <span class="node-type">HV / BCD</span>
+        </div>
+        <div class="node-row">
+          <span class="node-nm">180nm</span>
+          <div class="node-track"><div class="node-fill" style="background:var(--nwell);width:65%"></div></div>
+          <span class="node-type">Analog / HV</span>
+        </div>
+        <div class="node-row">
+          <span class="node-nm">350nm+</span>
+          <div class="node-track"><div class="node-fill" style="background:var(--via);width:55%"></div></div>
+          <span class="node-type">Power / HV</span>
+        </div>
+      </div>
+      <div class="foundries-block reveal">
+        <p class="foundries-label">Compatible foundries</p>
+        <div class="foundries-wrap">
+          <span class="foundry">TSMC</span>
+          <span class="foundry">GlobalFoundries</span>
+          <span class="foundry">SMIC</span>
+          <span class="foundry">UMC</span>
+          <span class="foundry">Tower Jazz</span>
+          <span class="foundry">DB HiTek</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chip floorplan visual -->
+    <div class="nodes-visual reveal">
+      <div class="nodes-visual-title">layout_top.gds — 8-Metal + L/C/R Passives (TSMC 28nm HPC)</div>
+      <svg viewBox="0 0 560 500" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="p-od"     width="8"  height="5"  patternUnits="userSpaceOnUse"><rect x="0" y="1" width="5" height="3" fill="#4CAF50" opacity=".65"/></pattern>
+          <pattern id="p-poly"   width="5"  height="1"  patternUnits="userSpaceOnUse"><rect width="1.2" height="1" fill="#E05547"/></pattern>
+          <pattern id="p-m1"     width="3"  height="1"  patternUnits="userSpaceOnUse"><rect width="1"   height="1" fill="#4488FF"/></pattern>
+          <pattern id="p-m2"     width="1"  height="4"  patternUnits="userSpaceOnUse"><rect width="1"   height="1" fill="#FF44AA"/></pattern>
+          <pattern id="p-m3"     width="6"  height="1"  patternUnits="userSpaceOnUse"><rect width="1.5" height="1" fill="#FFB800"/></pattern>
+          <pattern id="p-m4"     width="1"  height="8"  patternUnits="userSpaceOnUse"><rect width="1"   height="2" fill="#00CCDD"/></pattern>
+          <pattern id="p-m5"     width="10" height="1"  patternUnits="userSpaceOnUse"><rect width="2"   height="1" fill="#FF6600"/></pattern>
+          <pattern id="p-via"    width="6"  height="6"  patternUnits="userSpaceOnUse"><rect x="1" y="1" width="2" height="2" fill="#EDD25A" opacity=".85"/></pattern>
+          <pattern id="p-mimvia" width="5"  height="5"  patternUnits="userSpaceOnUse"><rect x="1" y="1" width="3" height="3" fill="#EDD25A" opacity=".80"/></pattern>
+          <pattern id="p-gnd"    width="1"  height="8"  patternUnits="userSpaceOnUse"><rect width="1" height="3" fill="#4488FF" opacity=".42"/></pattern>
+        </defs>
+        <rect width="560" height="500" fill="#04080E"/>
+
+        <!-- ══ ANALOG BLOCK (left, x 0–200) ══════════════════════ -->
+        <!-- N-well boundary -->
+        <rect x="6" y="6" width="194" height="488" fill="none" stroke="#5DC872" stroke-width="1" stroke-dasharray="4,3" opacity=".45"/>
+        <text x="100" y="18" text-anchor="middle" font-family="IBM Plex Mono" font-size="5.5" fill="#5DC872" opacity=".55">NWELL</text>
+
+        <!-- OD: transistor active regions (differential pair + current mirror) -->
+        <rect x="12" y="26"  width="82" height="11" fill="#4CAF50" opacity=".55"/>
+        <rect x="12" y="43"  width="82" height="11" fill="#4CAF50" opacity=".50"/>
+        <rect x="106" y="26" width="82" height="11" fill="#4CAF50" opacity=".55"/>
+        <rect x="106" y="43" width="82" height="11" fill="#4CAF50" opacity=".50"/>
+        <rect x="12" y="78"  width="176" height="9"  fill="#4CAF50" opacity=".48"/>
+        <rect x="12" y="95"  width="176" height="9"  fill="#4CAF50" opacity=".48"/>
+        <rect x="12" y="140" width="176" height="9"  fill="#4CAF50" opacity=".45"/>
+        <rect x="12" y="157" width="176" height="9"  fill="#4CAF50" opacity=".45"/>
+
+        <!-- Poly gate fingers — diff pair -->
+        <g fill="#E05547" opacity=".88">
+          <rect x="24"  y="21" width="1.2" height="23"/><rect x="31"  y="21" width="1.2" height="23"/>
+          <rect x="38"  y="21" width="1.2" height="23"/><rect x="45"  y="21" width="1.2" height="23"/>
+          <rect x="52"  y="21" width="1.2" height="23"/><rect x="59"  y="21" width="1.2" height="23"/>
+          <rect x="66"  y="21" width="1.2" height="23"/><rect x="73"  y="21" width="1.2" height="23"/>
+          <rect x="80"  y="21" width="1.2" height="23"/><rect x="87"  y="21" width="1.2" height="23"/>
+          <rect x="118" y="21" width="1.2" height="23"/><rect x="125" y="21" width="1.2" height="23"/>
+          <rect x="132" y="21" width="1.2" height="23"/><rect x="139" y="21" width="1.2" height="23"/>
+          <rect x="146" y="21" width="1.2" height="23"/><rect x="153" y="21" width="1.2" height="23"/>
+          <rect x="160" y="21" width="1.2" height="23"/><rect x="167" y="21" width="1.2" height="23"/>
+          <rect x="174" y="21" width="1.2" height="23"/><rect x="181" y="21" width="1.2" height="23"/>
+        </g>
+        <!-- Poly gate fingers — current mirror (dense) -->
+        <g fill="#E05547" opacity=".82">
+          <rect x="14" y="73" width="1" height="20"/><rect x="18" y="73" width="1" height="20"/>
+          <rect x="22" y="73" width="1" height="20"/><rect x="26" y="73" width="1" height="20"/>
+          <rect x="30" y="73" width="1" height="20"/><rect x="34" y="73" width="1" height="20"/>
+          <rect x="38" y="73" width="1" height="20"/><rect x="42" y="73" width="1" height="20"/>
+          <rect x="46" y="73" width="1" height="20"/><rect x="50" y="73" width="1" height="20"/>
+          <rect x="54" y="73" width="1" height="20"/><rect x="58" y="73" width="1" height="20"/>
+          <rect x="62" y="73" width="1" height="20"/><rect x="66" y="73" width="1" height="20"/>
+          <rect x="70" y="73" width="1" height="20"/><rect x="74" y="73" width="1" height="20"/>
+          <rect x="78" y="73" width="1" height="20"/><rect x="82" y="73" width="1" height="20"/>
+          <rect x="86" y="73" width="1" height="20"/><rect x="90" y="73" width="1" height="20"/>
+          <rect x="94" y="73" width="1" height="20"/><rect x="98" y="73" width="1" height="20"/>
+          <rect x="102" y="73" width="1" height="20"/><rect x="106" y="73" width="1" height="20"/>
+          <rect x="110" y="73" width="1" height="20"/><rect x="114" y="73" width="1" height="20"/>
+          <rect x="118" y="73" width="1" height="20"/><rect x="122" y="73" width="1" height="20"/>
+          <rect x="126" y="73" width="1" height="20"/><rect x="130" y="73" width="1" height="20"/>
+          <rect x="134" y="73" width="1" height="20"/><rect x="138" y="73" width="1" height="20"/>
+          <rect x="142" y="73" width="1" height="20"/><rect x="146" y="73" width="1" height="20"/>
+          <rect x="150" y="73" width="1" height="20"/><rect x="154" y="73" width="1" height="20"/>
+          <rect x="158" y="73" width="1" height="20"/><rect x="162" y="73" width="1" height="20"/>
+          <rect x="166" y="73" width="1" height="20"/><rect x="170" y="73" width="1" height="20"/>
+          <rect x="174" y="73" width="1" height="20"/><rect x="178" y="73" width="1" height="20"/>
+          <rect x="182" y="73" width="1" height="20"/>
+        </g>
+
+        <!-- M1 contacts (via0 grid) -->
+        <g fill="#EDD25A" opacity=".80">
+          <rect x="24" y="27" width="2" height="2"/><rect x="31" y="27" width="2" height="2"/>
+          <rect x="38" y="27" width="2" height="2"/><rect x="45" y="27" width="2" height="2"/>
+          <rect x="52" y="27" width="2" height="2"/><rect x="59" y="27" width="2" height="2"/>
+          <rect x="66" y="27" width="2" height="2"/><rect x="73" y="27" width="2" height="2"/>
+          <rect x="80" y="27" width="2" height="2"/><rect x="87" y="27" width="2" height="2"/>
+          <rect x="24" y="40" width="2" height="2"/><rect x="31" y="40" width="2" height="2"/>
+          <rect x="38" y="40" width="2" height="2"/><rect x="45" y="40" width="2" height="2"/>
+          <rect x="52" y="40" width="2" height="2"/><rect x="59" y="40" width="2" height="2"/>
+          <rect x="118" y="27" width="2" height="2"/><rect x="125" y="27" width="2" height="2"/>
+          <rect x="132" y="27" width="2" height="2"/><rect x="139" y="27" width="2" height="2"/>
+          <rect x="146" y="27" width="2" height="2"/><rect x="153" y="27" width="2" height="2"/>
+          <rect x="160" y="27" width="2" height="2"/><rect x="167" y="27" width="2" height="2"/>
+          <!-- current mirror contacts -->
+          <rect x="14"  y="79" width="2" height="2"/><rect x="22" y="79" width="2" height="2"/>
+          <rect x="30"  y="79" width="2" height="2"/><rect x="38" y="79" width="2" height="2"/>
+          <rect x="46"  y="79" width="2" height="2"/><rect x="54" y="79" width="2" height="2"/>
+          <rect x="62"  y="79" width="2" height="2"/><rect x="70" y="79" width="2" height="2"/>
+          <rect x="78"  y="79" width="2" height="2"/><rect x="86" y="79" width="2" height="2"/>
+          <rect x="94"  y="79" width="2" height="2"/><rect x="102" y="79" width="2" height="2"/>
+          <rect x="110" y="79" width="2" height="2"/><rect x="118" y="79" width="2" height="2"/>
+          <rect x="126" y="79" width="2" height="2"/><rect x="134" y="79" width="2" height="2"/>
+          <rect x="142" y="79" width="2" height="2"/><rect x="150" y="79" width="2" height="2"/>
+          <rect x="158" y="79" width="2" height="2"/><rect x="166" y="79" width="2" height="2"/>
+          <rect x="174" y="79" width="2" height="2"/><rect x="182" y="79" width="2" height="2"/>
+        </g>
+
+        <!-- M1 local routing in analog (fine blue + power rails) -->
+        <rect x="6" y="6" width="194" height="488" fill="url(#p-m1)" opacity=".28"/>
+        <g fill="#4488FF" opacity=".70">
+          <rect x="6"  y="12"  width="194" height="2.5"/>
+          <rect x="6"  y="58"  width="194" height="2.5"/>
+          <rect x="6"  y="112" width="194" height="2.5"/>
+          <rect x="6"  y="168" width="194" height="2.5"/>
+          <rect x="6"  y="392" width="194" height="2.5"/>
+          <rect x="6"  y="448" width="194" height="2.5"/>
+          <rect x="6"  y="486" width="194" height="2.5"/>
+        </g>
+
+        <!-- M2 horizontal signal routing in analog -->
+        <rect x="6" y="6" width="194" height="488" fill="url(#p-m2)" opacity=".28"/>
+        <g fill="#FF44AA" opacity=".80">
+          <rect x="20"  y="52"  width="80"  height="1.5"/>
+          <rect x="110" y="52"  width="78"  height="1.5"/>
+          <rect x="20"  y="68"  width="168" height="1.5"/>
+          <rect x="20"  y="130" width="100" height="1.5"/>
+          <rect x="20"  y="165" width="168" height="1.5"/>
+        </g>
+
+        <!-- M3 vertical signals in analog -->
+        <rect x="6" y="6" width="194" height="488" fill="url(#p-m3)" opacity=".20"/>
+        <g fill="#FFB800" opacity=".78">
+          <rect x="98"  y="6"  width="2" height="100"/>
+          <rect x="110" y="6"  width="2" height="170"/>
+          <rect x="55"  y="56" width="2" height="150"/>
+          <rect x="150" y="20" width="2" height="150"/>
+        </g>
+
+        <!-- Via1 at M1/M2 junctions -->
+        <g fill="#FFEE88" opacity=".60">
+          <rect x="96"  y="50"  width="3" height="3"/>
+          <rect x="108" y="50"  width="3" height="3"/>
+          <rect x="53"  y="130" width="3" height="3"/>
+          <rect x="148" y="130" width="3" height="3"/>
+        </g>
+
+        <!-- M4 horizontal mesh in analog -->
+        <g fill="#00CCDD" opacity=".45">
+          <rect x="6" y="55"  width="194" height="2"/>
+          <rect x="6" y="112" width="194" height="3.5"/>
+          <rect x="6" y="168" width="194" height="3.5"/>
+          <rect x="6" y="392" width="194" height="3.5"/>
+          <rect x="6" y="448" width="194" height="3.5"/>
+        </g>
+
+        <!-- M5 vertical in analog -->
+        <g fill="#FF6600" opacity=".40">
+          <rect x="48"  y="6" width="3.5" height="488"/>
+          <rect x="100" y="6" width="3.5" height="488"/>
+          <rect x="152" y="6" width="3.5" height="488"/>
+        </g>
+
+        <!-- M6 horizontal power in analog -->
+        <g fill="#88DD00" opacity=".45">
+          <rect x="6" y="6"   width="194" height="5"/>
+          <rect x="6" y="112" width="194" height="5"/>
+          <rect x="6" y="392" width="194" height="5"/>
+          <rect x="6" y="460" width="194" height="5"/>
+        </g>
+
+        <!-- M7 vertical power in analog -->
+        <g fill="#AA44FF" opacity=".42">
+          <rect x="6"   y="6" width="7" height="488"/>
+          <rect x="100" y="6" width="7" height="488"/>
+          <rect x="186" y="6" width="7" height="488"/>
+        </g>
+
+        <!-- M8 top horizontal straps -->
+        <g fill="#FF5533" opacity=".50">
+          <rect x="6" y="6"   width="194" height="10"/>
+          <rect x="6" y="194" width="194" height="10"/>
+          <rect x="6" y="460" width="194" height="10"/>
+        </g>
+
+        <!-- Via stacks (M5-M8) in analog power -->
+        <g fill="#FF9977" opacity=".75">
+          <rect x="5"   y="5"   width="9" height="9"/>
+          <rect x="98"  y="5"   width="9" height="9"/>
+          <rect x="184" y="5"   width="9" height="9"/>
+          <rect x="5"   y="192" width="9" height="9"/>
+          <rect x="98"  y="192" width="9" height="9"/>
+          <rect x="184" y="192" width="9" height="9"/>
+          <rect x="5"   y="458" width="9" height="9"/>
+          <rect x="98"  y="458" width="9" height="9"/>
+          <rect x="184" y="458" width="9" height="9"/>
+        </g>
+
+        <!-- ══ PASSIVE DEVICES IN ANALOG BLOCK ══════════════════ -->
+
+        <!-- R — Poly Bias Resistor (feedback divider / current source) -->
+        <rect x="8" y="210" width="184" height="92" fill="#04080E" opacity=".60" rx="1"/>
+        <rect x="8" y="210" width="184" height="92" fill="none" stroke="#E05547" stroke-width=".8" stroke-dasharray="3,2" opacity=".60"/>
+        <text x="100" y="208" text-anchor="middle" font-family="IBM Plex Mono" font-size="5" fill="#E05547" opacity=".80">R — POLY BIAS  10 kΩ</text>
+        <!-- 5-bar HR-poly serpentine -->
+        <g fill="#E05547" opacity=".92">
+          <rect x="12" y="217" width="155" height="3.5"/>
+          <rect x="163.5" y="217" width="3.5" height="14.5"/>
+          <rect x="12" y="228.5" width="155" height="3.5"/>
+          <rect x="12" y="228.5" width="3.5" height="14.5"/>
+          <rect x="12" y="240" width="155" height="3.5"/>
+          <rect x="163.5" y="240" width="3.5" height="14.5"/>
+          <rect x="12" y="251.5" width="155" height="3.5"/>
+          <rect x="12" y="251.5" width="3.5" height="14.5"/>
+          <rect x="12" y="263" width="155" height="3.5"/>
+        </g>
+        <!-- Non-silicide block outline -->
+        <rect x="12" y="214" width="155" height="56" fill="none" stroke="#E05547" stroke-width=".5" stroke-dasharray="2,2" opacity=".40"/>
+        <!-- Ohmic contacts + M1 pads at terminals -->
+        <g fill="#EDD25A" opacity=".90">
+          <rect x="7" y="215" width="6" height="7"/>
+          <rect x="165" y="261" width="6" height="7"/>
+        </g>
+        <g fill="#4488FF" opacity=".80">
+          <rect x="6"  y="213" width="10" height="11"/>
+          <rect x="163" y="259" width="10" height="11"/>
+        </g>
+
+        <!-- C — MIM Decoupling Capacitor -->
+        <rect x="8" y="310" width="184" height="90" fill="#04080E" opacity=".60" rx="1"/>
+        <rect x="8" y="310" width="184" height="90" fill="none" stroke="#00CCDD" stroke-width=".8" stroke-dasharray="3,2" opacity=".60"/>
+        <text x="100" y="308" text-anchor="middle" font-family="IBM Plex Mono" font-size="5" fill="#00CCDD" opacity=".80">C — MIM DECAP  4 pF</text>
+        <!-- Bottom plate M4 -->
+        <rect x="12" y="314" width="176" height="82" fill="#00CCDD" opacity=".28"/>
+        <rect x="12" y="314" width="176" height="82" fill="none" stroke="#00CCDD" stroke-width="1.2" opacity=".68"/>
+        <!-- Top plate M5 -->
+        <rect x="18" y="320" width="164" height="70" fill="#FF6600" opacity=".28"/>
+        <rect x="18" y="320" width="164" height="70" fill="none" stroke="#FF6600" stroke-width="1.2" opacity=".68"/>
+        <!-- MIMCAP via array -->
+        <rect x="18" y="320" width="164" height="70" fill="url(#p-mimvia)" opacity=".75"/>
+        <!-- Bottom plate contacts (M3, left) -->
+        <g fill="#FFB800" opacity=".85">
+          <rect x="6" y="317" width="6" height="6"/><rect x="6" y="331" width="6" height="6"/>
+          <rect x="6" y="345" width="6" height="6"/><rect x="6" y="359" width="6" height="6"/>
+          <rect x="6" y="373" width="6" height="6"/><rect x="6" y="387" width="6" height="6"/>
+        </g>
+        <!-- Top plate contacts (M5, right) -->
+        <g fill="#FF6600" opacity=".85">
+          <rect x="188" y="323" width="6" height="6"/><rect x="188" y="337" width="6" height="6"/>
+          <rect x="188" y="351" width="6" height="6"/><rect x="188" y="365" width="6" height="6"/>
+          <rect x="188" y="379" width="6" height="6"/>
+        </g>
+
+        <!-- L — Spiral Inductor (M7/M8, analog lower area y 402-488) -->
+        <text x="100" y="401" text-anchor="middle" font-family="IBM Plex Mono" font-size="5" fill="#AA44FF" opacity=".85">L — SPIRAL IND (M7/M8)</text>
+        <!-- M1 ground shield under coil -->
+        <rect x="8" y="404" width="184" height="84" fill="url(#p-gnd)" opacity=".90"/>
+        <!-- Turn 1 (outermost, M7) -->
+        <g fill="#AA44FF" opacity=".82">
+          <rect x="8"   y="404" width="184" height="4"/>
+          <rect x="188" y="408" width="4"   height="74"/>
+          <rect x="8"   y="482" width="184" height="4"/>
+          <rect x="8"   y="408" width="4"   height="74"/>
+        </g>
+        <!-- Turn 2 -->
+        <g fill="#AA44FF" opacity=".80">
+          <rect x="20"  y="416" width="160" height="4"/>
+          <rect x="176" y="420" width="4"   height="50"/>
+          <rect x="20"  y="470" width="160" height="4"/>
+          <rect x="20"  y="420" width="4"   height="50"/>
+        </g>
+        <!-- Turn 3 (innermost) -->
+        <g fill="#AA44FF" opacity=".78">
+          <rect x="32"  y="428" width="136" height="4"/>
+          <rect x="164" y="432" width="4"   height="26"/>
+          <rect x="32"  y="458" width="136" height="4"/>
+          <rect x="32"  y="432" width="4"   height="26"/>
+        </g>
+        <!-- M8 bridge: cross-over at top connecting inner terminal out -->
+        <rect x="8"  y="399" width="28"  height="4"  fill="#FF5533" opacity=".90"/>
+        <rect x="8"  y="399" width="4"   height="9"  fill="#FF5533" opacity=".90"/>
+        <rect x="32" y="399" width="4"   height="33" fill="#FF5533" opacity=".72"/>
+        <!-- Via stacks at inductor ports -->
+        <g fill="#FF9977" opacity=".85">
+          <rect x="5"  y="397" width="9" height="9"/>
+          <rect x="30" y="456" width="9" height="9"/>
+        </g>
+        <text x="100" y="494" text-anchor="middle" font-family="IBM Plex Mono" font-size="4" fill="#AA44FF" opacity=".65">L ≈ 1.8 nH  Q ≈ 10</text>
+
+        <!-- Analog block label -->
+        <text x="100" y="499" text-anchor="middle" font-family="IBM Plex Mono" font-size="5.5" fill="#E05547" opacity=".85">ANALOG / PMIC — FULL CUSTOM</text>
+
+        <!-- ══ DIGITAL CORE (right, x 200–554) ═══════════════════ -->
+
+        <!-- Standard cell N-well strips (alternating, ~36px rows) -->
+        <g stroke="#5DC872" stroke-width=".5" fill="none" stroke-dasharray="3,2" opacity=".30">
+          <rect x="200" y="6"   width="354" height="17"/>
+          <rect x="200" y="41"  width="354" height="17"/>
+          <rect x="200" y="76"  width="354" height="17"/>
+          <rect x="200" y="111" width="354" height="17"/>
+          <rect x="200" y="146" width="354" height="17"/>
+          <rect x="200" y="181" width="354" height="17"/>
+          <rect x="200" y="216" width="354" height="17"/>
+          <rect x="200" y="251" width="354" height="17"/>
+          <rect x="200" y="286" width="354" height="17"/>
+          <rect x="200" y="321" width="354" height="17"/>
+          <rect x="200" y="356" width="354" height="17"/>
+          <rect x="200" y="381" width="354" height="17"/>
+          <rect x="200" y="416" width="354" height="17"/>
+          <rect x="200" y="451" width="354" height="17"/>
+          <rect x="200" y="474" width="354" height="17"/>
+        </g>
+
+        <!-- OD pattern in std cells -->
+        <rect x="200" y="6" width="354" height="488" fill="url(#p-od)" opacity=".18"/>
+
+        <!-- Poly in digital (standard cell gates, dense) -->
+        <rect x="200" y="6" width="354" height="488" fill="url(#p-poly)" opacity=".28"/>
+
+        <!-- M1: dense fine vertical + horizontal VDD/VSS rails -->
+        <rect x="200" y="6" width="354" height="488" fill="url(#p-m1)" opacity=".42"/>
+        <!-- M1 VDD/VSS cell rails (every ~18px) -->
+        <g fill="#4488FF" opacity=".72">
+          <rect x="200" y="6"   width="354" height="2.8"/><rect x="200" y="22"  width="354" height="2.8"/>
+          <rect x="200" y="41"  width="354" height="2.8"/><rect x="200" y="57"  width="354" height="2.8"/>
+          <rect x="200" y="76"  width="354" height="2.8"/><rect x="200" y="92"  width="354" height="2.8"/>
+          <rect x="200" y="111" width="354" height="2.8"/><rect x="200" y="127" width="354" height="2.8"/>
+          <rect x="200" y="146" width="354" height="2.8"/><rect x="200" y="162" width="354" height="2.8"/>
+          <rect x="200" y="181" width="354" height="2.8"/><rect x="200" y="197" width="354" height="2.8"/>
+          <rect x="200" y="216" width="354" height="2.8"/><rect x="200" y="232" width="354" height="2.8"/>
+          <rect x="200" y="251" width="354" height="2.8"/><rect x="200" y="267" width="354" height="2.8"/>
+          <rect x="200" y="286" width="354" height="2.8"/><rect x="200" y="302" width="354" height="2.8"/>
+          <rect x="200" y="321" width="354" height="2.8"/><rect x="200" y="337" width="354" height="2.8"/>
+          <rect x="200" y="356" width="354" height="2.8"/><rect x="200" y="372" width="354" height="2.8"/>
+          <rect x="200" y="381" width="354" height="2.8"/><rect x="200" y="416" width="354" height="2.8"/>
+          <rect x="200" y="432" width="354" height="2.8"/><rect x="200" y="451" width="354" height="2.8"/>
+          <rect x="200" y="467" width="354" height="2.8"/><rect x="200" y="484" width="354" height="2.8"/>
+        </g>
+
+        <!-- M2: fine horizontal signal routing -->
+        <rect x="200" y="6" width="354" height="488" fill="url(#p-m2)" opacity=".38"/>
+        <!-- M2 key signals (selective, showing actual routing activity) -->
+        <g fill="#FF44AA" opacity=".72">
+          <rect x="210" y="16"  width="90"  height="1.5"/><rect x="340" y="16"  width="70"  height="1.5"/>
+          <rect x="215" y="32"  width="120" height="1.5"/><rect x="390" y="32"  width="60"  height="1.5"/>
+          <rect x="250" y="50"  width="85"  height="1.5"/><rect x="400" y="50"  width="50"  height="1.5"/>
+          <rect x="210" y="67"  width="65"  height="1.5"/><rect x="320" y="67"  width="100" height="1.5"/>
+          <rect x="225" y="86"  width="110" height="1.5"/><rect x="400" y="86"  width="55"  height="1.5"/>
+          <rect x="210" y="103" width="80"  height="1.5"/><rect x="345" y="103" width="80"  height="1.5"/>
+          <rect x="255" y="121" width="95"  height="1.5"/><rect x="420" y="121" width="50"  height="1.5"/>
+          <rect x="210" y="140" width="70"  height="1.5"/><rect x="330" y="140" width="90"  height="1.5"/>
+          <rect x="240" y="157" width="88"  height="1.5"/><rect x="390" y="157" width="65"  height="1.5"/>
+          <rect x="210" y="175" width="110" height="1.5"/><rect x="385" y="175" width="50"  height="1.5"/>
+          <rect x="220" y="193" width="80"  height="1.5"/><rect x="360" y="193" width="80"  height="1.5"/>
+          <rect x="210" y="211" width="90"  height="1.5"/><rect x="360" y="211" width="60"  height="1.5"/>
+          <rect x="248" y="229" width="100" height="1.5"/><rect x="410" y="229" width="50"  height="1.5"/>
+          <rect x="210" y="247" width="72"  height="1.5"/><rect x="342" y="247" width="88"  height="1.5"/>
+          <rect x="228" y="265" width="98"  height="1.5"/><rect x="392" y="265" width="58"  height="1.5"/>
+          <rect x="210" y="283" width="80"  height="1.5"/><rect x="352" y="283" width="78"  height="1.5"/>
+          <rect x="238" y="301" width="110" height="1.5"/><rect x="412" y="301" width="48"  height="1.5"/>
+          <rect x="210" y="319" width="90"  height="1.5"/><rect x="368" y="319" width="68"  height="1.5"/>
+          <rect x="218" y="337" width="82"  height="1.5"/><rect x="358" y="337" width="80"  height="1.5"/>
+          <rect x="210" y="355" width="100" height="1.5"/><rect x="380" y="355" width="58"  height="1.5"/>
+          <rect x="228" y="373" width="88"  height="1.5"/><rect x="398" y="373" width="50"  height="1.5"/>
+          <rect x="210" y="386" width="75"  height="1.5"/><rect x="348" y="386" width="92"  height="1.5"/>
+          <rect x="218" y="420" width="88"  height="1.5"/><rect x="362" y="420" width="70"  height="1.5"/>
+          <rect x="230" y="436" width="95"  height="1.5"/><rect x="388" y="436" width="58"  height="1.5"/>
+          <rect x="214" y="454" width="78"  height="1.5"/><rect x="348" y="454" width="82"  height="1.5"/>
+          <rect x="242" y="472" width="100" height="1.5"/><rect x="404" y="472" width="52"  height="1.5"/>
+          <rect x="210" y="488" width="90"  height="1.5"/><rect x="366" y="488" width="68"  height="1.5"/>
+        </g>
+
+        <!-- Via1 scattered at M1/M2 junctions -->
+        <rect x="200" y="6" width="354" height="488" fill="url(#p-via)" opacity=".28"/>
+
+        <!-- M3: semi-global vertical gold routing -->
+        <rect x="200" y="6" width="354" height="488" fill="url(#p-m3)" opacity=".25"/>
+        <g fill="#FFB800" opacity=".68">
+          <rect x="214" y="6"  width="2" height="488"/><rect x="228" y="80"  width="2" height="408"/>
+          <rect x="248" y="6"  width="2" height="488"/><rect x="270" y="50"  width="2" height="438"/>
+          <rect x="292" y="6"  width="2" height="488"/><rect x="312" y="30"  width="2" height="458"/>
+          <rect x="336" y="6"  width="2" height="488"/><rect x="358" y="60"  width="2" height="428"/>
+          <rect x="380" y="6"  width="2" height="488"/><rect x="402" y="40"  width="2" height="448"/>
+          <rect x="426" y="6"  width="2" height="488"/><rect x="448" y="20"  width="2" height="468"/>
+          <rect x="470" y="6"  width="2" height="488"/><rect x="492" y="50"  width="2" height="438"/>
+          <rect x="516" y="6"  width="2" height="488"/><rect x="538" y="30"  width="2" height="458"/>
+        </g>
+
+        <!-- Via2 at M2/M3 -->
+        <g fill="#FFEE88" opacity=".55">
+          <rect x="212" y="15" width="3" height="3"/><rect x="226" y="31" width="3" height="3"/>
+          <rect x="246" y="50" width="3" height="3"/><rect x="268" y="67" width="3" height="3"/>
+          <rect x="290" y="86" width="3" height="3"/><rect x="310" y="103" width="3" height="3"/>
+          <rect x="334" y="121" width="3" height="3"/><rect x="356" y="140" width="3" height="3"/>
+          <rect x="378" y="157" width="3" height="3"/><rect x="400" y="175" width="3" height="3"/>
+          <rect x="424" y="193" width="3" height="3"/><rect x="446" y="211" width="3" height="3"/>
+          <rect x="468" y="229" width="3" height="3"/><rect x="490" y="247" width="3" height="3"/>
+          <rect x="514" y="265" width="3" height="3"/><rect x="536" y="283" width="3" height="3"/>
+        </g>
+
+        <!-- M4: semi-global horizontal cyan + power mesh -->
+        <rect x="200" y="6" width="354" height="488" fill="url(#p-m4)" opacity=".26"/>
+        <g fill="#00CCDD" opacity=".68">
+          <rect x="200" y="29"  width="354" height="2"/><rect x="200" y="65"  width="354" height="2"/>
+          <rect x="200" y="101" width="354" height="2"/><rect x="200" y="137" width="354" height="2"/>
+          <rect x="200" y="173" width="354" height="2"/><rect x="200" y="209" width="354" height="2"/>
+          <rect x="200" y="245" width="354" height="2"/><rect x="200" y="281" width="354" height="2"/>
+          <rect x="200" y="317" width="354" height="2"/><rect x="200" y="353" width="354" height="2"/>
+          <rect x="200" y="425" width="354" height="2"/><rect x="200" y="461" width="354" height="2"/>
+          <rect x="200" y="483" width="354" height="2"/>
+          <!-- Wide M4 power (every ~72px) -->
+          <rect x="200" y="41"  width="354" height="4.5"/><rect x="200" y="113" width="354" height="4.5"/>
+          <rect x="200" y="185" width="354" height="4.5"/><rect x="200" y="257" width="354" height="4.5"/>
+          <rect x="200" y="329" width="354" height="4.5"/><rect x="200" y="401" width="354" height="4.5"/>
+          <rect x="200" y="463" width="354" height="4.5"/>
+        </g>
+
+        <!-- Via3 at M3/M4 crossings -->
+        <g fill="#88EEFF" opacity=".55">
+          <rect x="212" y="39" width="3" height="3"/><rect x="246" y="39" width="3" height="3"/>
+          <rect x="290" y="39" width="3" height="3"/><rect x="334" y="39" width="3" height="3"/>
+          <rect x="378" y="39" width="3" height="3"/><rect x="424" y="39" width="3" height="3"/>
+          <rect x="468" y="39" width="3" height="3"/><rect x="514" y="39" width="3" height="3"/>
+          <rect x="212" y="111" width="3" height="3"/><rect x="268" y="111" width="3" height="3"/>
+          <rect x="312" y="111" width="3" height="3"/><rect x="358" y="111" width="3" height="3"/>
+          <rect x="402" y="111" width="3" height="3"/><rect x="448" y="111" width="3" height="3"/>
+          <rect x="492" y="111" width="3" height="3"/><rect x="538" y="111" width="3" height="3"/>
+          <rect x="212" y="183" width="3" height="3"/><rect x="270" y="183" width="3" height="3"/>
+          <rect x="312" y="183" width="3" height="3"/><rect x="358" y="183" width="3" height="3"/>
+          <rect x="402" y="183" width="3" height="3"/><rect x="448" y="183" width="3" height="3"/>
+          <rect x="492" y="183" width="3" height="3"/><rect x="538" y="183" width="3" height="3"/>
+          <rect x="212" y="255" width="3" height="3"/><rect x="270" y="255" width="3" height="3"/>
+          <rect x="312" y="255" width="3" height="3"/><rect x="358" y="255" width="3" height="3"/>
+          <rect x="402" y="255" width="3" height="3"/><rect x="448" y="255" width="3" height="3"/>
+          <rect x="212" y="327" width="3" height="3"/><rect x="270" y="327" width="3" height="3"/>
+          <rect x="312" y="327" width="3" height="3"/><rect x="358" y="327" width="3" height="3"/>
+          <rect x="212" y="399" width="3" height="3"/><rect x="270" y="399" width="3" height="3"/>
+          <rect x="312" y="399" width="3" height="3"/><rect x="358" y="399" width="3" height="3"/>
+          <rect x="212" y="461" width="3" height="3"/><rect x="270" y="461" width="3" height="3"/>
+          <rect x="312" y="461" width="3" height="3"/><rect x="358" y="461" width="3" height="3"/>
+        </g>
+
+        <!-- M5: global vertical orange power + routing -->
+        <g fill="#FF6600" opacity=".48">
+          <rect x="236" y="6" width="4.5" height="488"/><rect x="308" y="6" width="4.5" height="488"/>
+          <rect x="380" y="6" width="4.5" height="488"/><rect x="452" y="6" width="4.5" height="488"/>
+          <rect x="524" y="6" width="4.5" height="488"/>
+          <rect x="220" y="6"  width="1.5" height="488" opacity=".85"/><rect x="258" y="30" width="1.5" height="458" opacity=".85"/>
+          <rect x="296" y="6"  width="1.5" height="488" opacity=".85"/><rect x="340" y="50" width="1.5" height="438" opacity=".85"/>
+          <rect x="366" y="6"  width="1.5" height="488" opacity=".85"/><rect x="416" y="20" width="1.5" height="468" opacity=".85"/>
+          <rect x="438" y="6"  width="1.5" height="488" opacity=".85"/><rect x="480" y="40" width="1.5" height="448" opacity=".85"/>
+          <rect x="508" y="6"  width="1.5" height="488" opacity=".85"/><rect x="546" y="30" width="1.5" height="458" opacity=".85"/>
+        </g>
+
+        <!-- Via4 at M4/M5 (visible clusters) -->
+        <g fill="#FFAA44" opacity=".70">
+          <rect x="234" y="39"  width="5" height="5"/><rect x="306" y="39"  width="5" height="5"/>
+          <rect x="378" y="39"  width="5" height="5"/><rect x="450" y="39"  width="5" height="5"/>
+          <rect x="522" y="39"  width="5" height="5"/>
+          <rect x="234" y="111" width="5" height="5"/><rect x="306" y="111" width="5" height="5"/>
+          <rect x="378" y="111" width="5" height="5"/><rect x="450" y="111" width="5" height="5"/>
+          <rect x="522" y="111" width="5" height="5"/>
+          <rect x="234" y="183" width="5" height="5"/><rect x="306" y="183" width="5" height="5"/>
+          <rect x="378" y="183" width="5" height="5"/><rect x="450" y="183" width="5" height="5"/>
+          <rect x="522" y="183" width="5" height="5"/>
+          <rect x="234" y="255" width="5" height="5"/><rect x="306" y="255" width="5" height="5"/>
+          <rect x="378" y="255" width="5" height="5"/><rect x="450" y="255" width="5" height="5"/>
+          <rect x="522" y="255" width="5" height="5"/>
+          <rect x="234" y="327" width="5" height="5"/><rect x="306" y="327" width="5" height="5"/>
+          <rect x="378" y="327" width="5" height="5"/><rect x="450" y="327" width="5" height="5"/>
+          <rect x="522" y="327" width="5" height="5"/>
+          <rect x="234" y="399" width="5" height="5"/><rect x="306" y="399" width="5" height="5"/>
+          <rect x="378" y="399" width="5" height="5"/><rect x="450" y="399" width="5" height="5"/>
+          <rect x="522" y="399" width="5" height="5"/>
+          <rect x="234" y="461" width="5" height="5"/><rect x="306" y="461" width="5" height="5"/>
+          <rect x="378" y="461" width="5" height="5"/>
+        </g>
+
+        <!-- M6: global horizontal lime power mesh (wide) -->
+        <g fill="#88DD00" opacity=".52">
+          <rect x="200" y="6"   width="354" height="6"/><rect x="200" y="77"  width="354" height="6"/>
+          <rect x="200" y="149" width="354" height="6"/><rect x="200" y="221" width="354" height="6"/>
+          <rect x="200" y="293" width="354" height="6"/><rect x="200" y="365" width="354" height="6"/>
+          <rect x="200" y="437" width="354" height="6"/>
+          <rect x="200" y="41"  width="354" height="2" opacity=".80"/>
+          <rect x="200" y="113" width="354" height="2" opacity=".80"/>
+          <rect x="200" y="185" width="354" height="2" opacity=".80"/>
+          <rect x="200" y="257" width="354" height="2" opacity=".80"/>
+          <rect x="200" y="329" width="354" height="2" opacity=".80"/>
+          <rect x="200" y="401" width="354" height="2" opacity=".80"/>
+          <rect x="200" y="463" width="354" height="2" opacity=".80"/>
+        </g>
+
+        <!-- Via5 at M5/M6 (larger) -->
+        <g fill="#CCFF44" opacity=".62">
+          <rect x="233" y="5"   width="7" height="7"/><rect x="305" y="5"   width="7" height="7"/>
+          <rect x="377" y="5"   width="7" height="7"/><rect x="449" y="5"   width="7" height="7"/>
+          <rect x="521" y="5"   width="7" height="7"/>
+          <rect x="233" y="75"  width="7" height="7"/><rect x="305" y="75"  width="7" height="7"/>
+          <rect x="377" y="75"  width="7" height="7"/><rect x="449" y="75"  width="7" height="7"/>
+          <rect x="521" y="75"  width="7" height="7"/>
+          <rect x="233" y="147" width="7" height="7"/><rect x="305" y="147" width="7" height="7"/>
+          <rect x="377" y="147" width="7" height="7"/><rect x="449" y="147" width="7" height="7"/>
+          <rect x="521" y="147" width="7" height="7"/>
+          <rect x="233" y="219" width="7" height="7"/><rect x="305" y="219" width="7" height="7"/>
+          <rect x="377" y="219" width="7" height="7"/><rect x="449" y="219" width="7" height="7"/>
+          <rect x="521" y="219" width="7" height="7"/>
+          <rect x="233" y="291" width="7" height="7"/><rect x="305" y="291" width="7" height="7"/>
+          <rect x="377" y="291" width="7" height="7"/><rect x="449" y="291" width="7" height="7"/>
+          <rect x="521" y="291" width="7" height="7"/>
+          <rect x="233" y="363" width="7" height="7"/><rect x="305" y="363" width="7" height="7"/>
+          <rect x="377" y="363" width="7" height="7"/><rect x="449" y="363" width="7" height="7"/>
+          <rect x="521" y="363" width="7" height="7"/>
+          <rect x="233" y="435" width="7" height="7"/><rect x="305" y="435" width="7" height="7"/>
+          <rect x="377" y="435" width="7" height="7"/><rect x="449" y="435" width="7" height="7"/>
+          <rect x="521" y="435" width="7" height="7"/>
+        </g>
+
+        <!-- M7: global vertical violet power mesh (very wide) -->
+        <g fill="#AA44FF" opacity=".48">
+          <rect x="200" y="6"  width="9" height="488"/>
+          <rect x="272" y="6"  width="9" height="488"/>
+          <rect x="344" y="6"  width="9" height="488"/>
+          <rect x="416" y="6"  width="9" height="488"/>
+          <rect x="488" y="6"  width="9" height="488"/>
+          <rect x="236" y="6" width="3" height="488" opacity=".75"/>
+          <rect x="308" y="6" width="3" height="488" opacity=".75"/>
+          <rect x="380" y="6" width="3" height="488" opacity=".75"/>
+          <rect x="452" y="6" width="3" height="488" opacity=".75"/>
+          <rect x="524" y="6" width="3" height="488" opacity=".75"/>
+        </g>
+
+        <!-- Via6 at M6/M7 -->
+        <g fill="#CC88FF" opacity=".68">
+          <rect x="198" y="4"   width="10" height="10"/><rect x="270" y="4"   width="10" height="10"/>
+          <rect x="342" y="4"   width="10" height="10"/><rect x="414" y="4"   width="10" height="10"/>
+          <rect x="486" y="4"   width="10" height="10"/>
+          <rect x="198" y="75"  width="10" height="10"/><rect x="270" y="75"  width="10" height="10"/>
+          <rect x="342" y="75"  width="10" height="10"/><rect x="414" y="75"  width="10" height="10"/>
+          <rect x="486" y="75"  width="10" height="10"/>
+          <rect x="198" y="147" width="10" height="10"/><rect x="270" y="147" width="10" height="10"/>
+          <rect x="342" y="147" width="10" height="10"/><rect x="414" y="147" width="10" height="10"/>
+          <rect x="486" y="147" width="10" height="10"/>
+          <rect x="198" y="219" width="10" height="10"/><rect x="270" y="219" width="10" height="10"/>
+          <rect x="342" y="219" width="10" height="10"/><rect x="414" y="219" width="10" height="10"/>
+          <rect x="486" y="219" width="10" height="10"/>
+          <rect x="198" y="291" width="10" height="10"/><rect x="270" y="291" width="10" height="10"/>
+          <rect x="342" y="291" width="10" height="10"/><rect x="414" y="291" width="10" height="10"/>
+          <rect x="486" y="291" width="10" height="10"/>
+          <rect x="198" y="363" width="10" height="10"/><rect x="270" y="363" width="10" height="10"/>
+          <rect x="342" y="363" width="10" height="10"/><rect x="414" y="363" width="10" height="10"/>
+          <rect x="486" y="363" width="10" height="10"/>
+          <rect x="198" y="435" width="10" height="10"/><rect x="270" y="435" width="10" height="10"/>
+          <rect x="342" y="435" width="10" height="10"/><rect x="414" y="435" width="10" height="10"/>
+          <rect x="486" y="435" width="10" height="10"/>
+        </g>
+
+        <!-- M8: TOP METAL — widest horizontal power straps + long-range signal -->
+        <g fill="#FF5533" opacity=".58">
+          <!-- Wide VDD straps -->
+          <rect x="200" y="6"   width="354" height="13"/>
+          <rect x="200" y="149" width="354" height="13"/>
+          <rect x="200" y="293" width="354" height="13"/>
+          <rect x="200" y="437" width="354" height="13"/>
+          <!-- Wide VSS straps -->
+          <rect x="200" y="77"  width="354" height="13"/>
+          <rect x="200" y="221" width="354" height="13"/>
+          <rect x="200" y="365" width="354" height="13"/>
+          <rect x="200" y="472" width="354" height="13"/>
+          <!-- Narrower M8 signal routes -->
+          <rect x="200" y="41"  width="354" height="4.5" opacity=".80"/>
+          <rect x="200" y="113" width="354" height="4.5" opacity=".80"/>
+          <rect x="200" y="185" width="354" height="4.5" opacity=".80"/>
+          <rect x="200" y="257" width="354" height="4.5" opacity=".80"/>
+          <rect x="200" y="329" width="354" height="4.5" opacity=".80"/>
+          <rect x="200" y="401" width="354" height="4.5" opacity=".80"/>
+          <rect x="200" y="463" width="354" height="4.5" opacity=".80"/>
+        </g>
+
+        <!-- Via7 at M7/M8 (largest, most visible) -->
+        <g fill="#FF9977" opacity=".82">
+          <rect x="198" y="4"   width="12" height="12"/><rect x="270" y="4"   width="12" height="12"/>
+          <rect x="342" y="4"   width="12" height="12"/><rect x="414" y="4"   width="12" height="12"/>
+          <rect x="486" y="4"   width="12" height="12"/>
+          <rect x="198" y="75"  width="12" height="12"/><rect x="270" y="75"  width="12" height="12"/>
+          <rect x="342" y="75"  width="12" height="12"/><rect x="414" y="75"  width="12" height="12"/>
+          <rect x="486" y="75"  width="12" height="12"/>
+          <rect x="198" y="147" width="12" height="12"/><rect x="270" y="147" width="12" height="12"/>
+          <rect x="342" y="147" width="12" height="12"/><rect x="414" y="147" width="12" height="12"/>
+          <rect x="486" y="147" width="12" height="12"/>
+          <rect x="198" y="219" width="12" height="12"/><rect x="270" y="219" width="12" height="12"/>
+          <rect x="342" y="219" width="12" height="12"/><rect x="414" y="219" width="12" height="12"/>
+          <rect x="486" y="219" width="12" height="12"/>
+          <rect x="198" y="291" width="12" height="12"/><rect x="270" y="291" width="12" height="12"/>
+          <rect x="342" y="291" width="12" height="12"/><rect x="414" y="291" width="12" height="12"/>
+          <rect x="486" y="291" width="12" height="12"/>
+          <rect x="198" y="363" width="12" height="12"/><rect x="270" y="363" width="12" height="12"/>
+          <rect x="342" y="363" width="12" height="12"/><rect x="414" y="363" width="12" height="12"/>
+          <rect x="486" y="363" width="12" height="12"/>
+          <rect x="198" y="435" width="12" height="12"/><rect x="270" y="435" width="12" height="12"/>
+          <rect x="342" y="435" width="12" height="12"/><rect x="414" y="435" width="12" height="12"/>
+          <rect x="486" y="435" width="12" height="12"/>
+        </g>
+
+        <!-- C — Decap cells (digital bypass capacitor rows) -->
+        <rect x="205" y="388" width="330" height="35" fill="#04080E" opacity=".55" rx="1"/>
+        <rect x="205" y="388" width="330" height="35" fill="none" stroke="#00CCDD" stroke-width=".7" stroke-dasharray="3,2" opacity=".55"/>
+        <text x="370" y="386" text-anchor="middle" font-family="IBM Plex Mono" font-size="4.6" fill="#00CCDD" opacity=".85">C — DECAP CELLS (MIM, 28nm)</text>
+        <rect x="205" y="388" width="330" height="35" fill="url(#p-mimvia)" opacity=".58"/>
+        <rect x="205" y="388" width="330" height="4"  fill="#00CCDD" opacity=".50"/>
+        <rect x="205" y="419" width="330" height="4"  fill="#FF6600" opacity=".50"/>
+
+        <!-- R — Termination resistor (digital I/O, poly) -->
+        <rect x="205" y="450" width="185" height="32" fill="#04080E" opacity=".55" rx="1"/>
+        <rect x="205" y="450" width="185" height="32" fill="none" stroke="#E05547" stroke-width=".7" stroke-dasharray="3,2" opacity=".55"/>
+        <text x="297" y="448" text-anchor="middle" font-family="IBM Plex Mono" font-size="4.6" fill="#E05547" opacity=".85">R — TERM (POLY, 50Ω)</text>
+        <g fill="#E05547" opacity=".90">
+          <rect x="212" y="455" width="170" height="3"/>
+          <rect x="378" y="455" width="3"   height="11"/>
+          <rect x="212" y="463" width="170" height="3"/>
+          <rect x="212" y="463" width="3"   height="11"/>
+          <rect x="212" y="471" width="170" height="3"/>
+        </g>
+        <g fill="#EDD25A" opacity=".88">
+          <rect x="207" y="453" width="5" height="5"/>
+          <rect x="379" y="469" width="5" height="5"/>
+        </g>
+
+        <!-- Digital block label -->
+        <text x="377" y="497" text-anchor="middle" font-family="IBM Plex Mono" font-size="5.5" fill="#4488FF" opacity=".80">DIGITAL CORE — STD CELLS + DECAP + TERM-R</text>
+
+        <!-- Analog / Digital boundary at x=200 -->
+        <line x1="200" y1="6" x2="200" y2="494" stroke="white" stroke-width=".5" opacity=".22" stroke-dasharray="4,3"/>
+
+        <!-- Layer annotations (right edge, x=541) -->
+        <g font-family="IBM Plex Mono" font-size="5" text-anchor="start">
+          <rect x="541" y="8"   width="6" height="6" fill="#FF5533" opacity=".80"/>
+          <text x="541" y="21"  fill="#FF5533" opacity=".70">M8</text>
+          <rect x="541" y="25"  width="6" height="6" fill="#AA44FF" opacity=".80"/>
+          <text x="541" y="38"  fill="#AA44FF" opacity=".70">M7</text>
+          <rect x="541" y="42"  width="6" height="6" fill="#88DD00" opacity=".80"/>
+          <text x="541" y="55"  fill="#88DD00" opacity=".70">M6</text>
+          <rect x="541" y="59"  width="6" height="6" fill="#FF6600" opacity=".80"/>
+          <text x="541" y="72"  fill="#FF6600" opacity=".70">M5</text>
+          <rect x="541" y="76"  width="6" height="6" fill="#00CCDD" opacity=".80"/>
+          <text x="541" y="89"  fill="#00CCDD" opacity=".70">M4</text>
+          <rect x="541" y="93"  width="6" height="6" fill="#FFB800" opacity=".80"/>
+          <text x="541" y="106" fill="#FFB800" opacity=".70">M3</text>
+          <rect x="541" y="110" width="6" height="6" fill="#FF44AA" opacity=".80"/>
+          <text x="541" y="123" fill="#FF44AA" opacity=".70">M2</text>
+          <rect x="541" y="127" width="6" height="6" fill="#4488FF" opacity=".80"/>
+          <text x="541" y="140" fill="#4488FF" opacity=".70">M1</text>
+          <rect x="541" y="144" width="6" height="6" fill="#E05547" opacity=".80"/>
+          <text x="541" y="157" fill="#E05547" opacity=".70">Poly</text>
+          <rect x="541" y="161" width="6" height="6" fill="#4CAF50" opacity=".80"/>
+          <text x="541" y="174" fill="#4CAF50" opacity=".70">OD</text>
+          <rect x="541" y="178" width="6" height="6" fill="#EDD25A" opacity=".80"/>
+          <text x="541" y="191" fill="#EDD25A" opacity=".70">Via</text>
+          <rect x="541" y="200" width="6" height="6" fill="#AA44FF" opacity=".80"/>
+          <text x="541" y="213" fill="#AA44FF" opacity=".70">L</text>
+          <rect x="541" y="217" width="6" height="6" fill="#00CCDD" opacity=".80"/>
+          <text x="541" y="230" fill="#00CCDD" opacity=".70">C</text>
+          <rect x="541" y="234" width="6" height="6" fill="#E05547" opacity=".80"/>
+          <text x="541" y="247" fill="#E05547" opacity=".70">R</text>
+        </g>
+
+        <!-- Scale bar (bottom of digital block) -->
+        <line x1="202" y1="496" x2="274" y2="496" stroke="white" stroke-width=".8" opacity=".35"/>
+        <line x1="202" y1="493" x2="202" y2="499" stroke="white" stroke-width=".8" opacity=".35"/>
+        <line x1="274" y1="493" x2="274" y2="499" stroke="white" stroke-width=".8" opacity=".35"/>
+        <text x="238" y="499" text-anchor="middle" font-family="IBM Plex Mono" font-size="5" fill="white" opacity=".40">1 µm</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- WHY -->
+<section id="why">
+  <p class="sec-label reveal">Why Brightfound</p>
+  <h2 class="reveal">Built for the way<br><em>modern chip teams</em> work</h2>
+  <div class="why-grid reveal" style="margin-top:2.5rem">
+    <div class="why-card">
+      <div class="why-num">01 — Cost</div>
+      <h3>40–50% below US local rates</h3>
+      <p>Senior IC layout engineers billed at $55–$110/hr — without compromising on quality or domain-specific experience.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-num">02 — Talent</div>
+      <h3>Top-tier engineering pedigree</h3>
+      <p>EE graduates from top universities across Asia with 5–22 years of hands-on IC layout experience across analog, mixed-signal, and digital domains.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-num">03 — Legal</div>
+      <h3>US LLC as your contract counterpart</h3>
+      <p>You sign with Brightfound LLC — a US legal entity. Standard MSA, SOW, and IP assignment. Your legal team will be comfortable.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-num">04 — IP Security</div>
+      <h3>Your IP never leaves your environment</h3>
+      <p>Engineers work inside your VDI or remote desktop using your EDA licenses. Design data stays in your systems — no file transfers through Brightfound.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-num">05 — Compliance</div>
+      <h3>EAR-compliant operations</h3>
+      <p>We operate exclusively at 28nm and above. No controlled technology transfers. Our compliance posture is reviewed by qualified US legal counsel.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-num">06 — Flexibility</div>
+      <h3>On-demand, project-scoped</h3>
+      <p>Engage one engineer or a full team. Scale up during tape-out crunch; scale down when the project closes. No long-term headcount commitments.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CHALLENGE -->
+<section id="challenge">
+  <p class="sec-label reveal">The challenge</p>
+  <h2 class="reveal">Why chip teams struggle<br>with <em>layout resources</em></h2>
+  <div class="challenge-grid reveal">
+    <div class="challenge-item">
+      <div class="challenge-icon" style="background:rgba(224,85,71,.12)">🔍</div>
+      <div class="challenge-body">
+        <h4>Experienced analog layout engineers are rare</h4>
+        <p>Senior IC layout talent — especially for analog and mixed-signal — is one of the scarcest resources in the US semiconductor industry. Hiring takes months, and the pipeline is thin.</p>
+      </div>
+    </div>
+    <div class="challenge-item">
+      <div class="challenge-icon" style="background:rgba(212,151,78,.12)">💸</div>
+      <div class="challenge-body">
+        <h4>US local contractors are expensive</h4>
+        <p>Experienced US layout engineers command $100–$150/hr on contract. For a tape-out requiring 3 engineers over 6 months, that's $700K+ — often more than a startup's entire layout budget.</p>
+      </div>
+    </div>
+    <div class="challenge-item">
+      <div class="challenge-icon" style="background:rgba(91,153,232,.12)">📋</div>
+      <div class="challenge-body">
+        <h4>Headcount is hard to justify for one project</h4>
+        <p>Hiring full-time for a project that ends at tape-out creates retention risk and severance overhead. Contract resources are the right model — but quality contract engineers are even harder to find.</p>
+      </div>
+    </div>
+    <div class="challenge-item">
+      <div class="challenge-icon" style="background:rgba(93,200,114,.12)">🔒</div>
+      <div class="challenge-body">
+        <h4>IP security concerns with offshore teams</h4>
+        <p>The instinct is right — but the risk is manageable. Brightfound engineers work inside your VDI environment using your EDA licenses. Your design data never touches our systems.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- FAQ -->
+<section id="faq">
+  <p class="sec-label reveal">FAQ</p>
+  <h2 class="reveal">Common questions</h2>
+  <div class="faq-list reveal" id="faqList">
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        How do you protect our design IP?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a"><div class="faq-a-inner">
+        Our standard engagement model requires clients to provision VDI (Virtual Desktop Infrastructure) access for our engineers. All layout work is performed inside your remote environment using your EDA tool licenses — Cadence Virtuoso, Synopsys Custom Compiler, or equivalent. Design databases, PDKs, and netlists never leave your systems. Engineers cannot download or export design files locally. Our contracts include robust NDA and IP assignment clauses reviewed by US legal counsel.
+      </div></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Are you compliant with US export regulations (EAR)?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a"><div class="faq-a-inner">
+        Yes. We operate exclusively at 28nm and above process nodes. Our engineers work within client-controlled VDI environments using client-provided EDA tool licenses — no controlled technology transfer occurs. Our compliance posture is reviewed by qualified US export control counsel, and we do not accept engagements involving advanced nodes (≤16nm), military/defense applications, or any end uses subject to ITAR.
+      </div></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        What EDA tools do your engineers use?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a"><div class="faq-a-inner">
+        Our engineers are experienced with Cadence Virtuoso (full custom analog/mixed-signal layout), Cadence Innovus (digital P&R), Synopsys Custom Compiler, Mentor Calibre (DRC/LVS), and PVS. All tool licenses are provided by the client via VDI — we do not supply or transfer EDA software. Engineers typically need 1–2 days to familiarize themselves with a new foundry PDK before productive work begins.
+      </div></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        How do you handle the time zone difference?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a"><div class="faq-a-inner">
+        Our engineers are based in China (UTC+8), which is 15–16 hours ahead of US Pacific time. In practice this works well: engineers work their full day while the US team is offline, then submit progress reports and questions. The US team reviews in the morning and sends feedback — creating a near-continuous work cycle that often accelerates projects. We hold a brief bi-weekly sync call (scheduled at a time convenient to both sides) and are available for async communication via email and Slack throughout the day.
+      </div></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        What is the minimum engagement size?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a"><div class="faq-a-inner">
+        We typically work in monthly minimums of 80 hours per engineer (half-time). This ensures continuity and meaningful productivity. Most engagements are 3–12 months in duration, aligning with design-to-tape-out cycles. We can also support shorter-duration, block-level engagements (4–8 weeks) for specific circuit modules such as a PMIC block or a PLL layout.
+      </div></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Who do I sign the contract with? What are the payment terms?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a"><div class="faq-a-inner">
+        You sign a Master Service Agreement (MSA) and Statement of Work (SOW) directly with Brightfound LLC, a US-registered limited liability company. Invoicing is monthly, based on engineer timesheets submitted weekly. Payment terms are Net-30 from invoice date, via ACH or wire transfer to our US bank account. We can provide W-9 and other standard vendor onboarding documentation upon request.
+      </div></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        How do we get started?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a"><div class="faq-a-inner">
+        Fill out the contact form below or email us at contact@brightfoundllc.com. Tell us your process node, design type (analog, digital, or mixed), approximate timeline, and number of engineers needed. We'll respond within one business day with a proposed engineer profile and hourly rate. If it looks like a fit, we'll schedule a 30-minute intro call to align on technical requirements before proceeding to contract.
+      </div></div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- COMPLIANCE STRIP -->
+<div class="compliance-strip">
+  <span class="comp-badge green">EAR Compliant — 28nm+</span>
+  <span class="comp-badge blue">US LLC Entity</span>
+  <span class="comp-badge gold">IP-Safe VDI Model</span>
+  <p class="comp-text">
+    All engagements are structured for 28nm and above process nodes only. Engineers operate within client-controlled VDI environments — design data never transits Brightfound systems. Export control posture reviewed by qualified US legal counsel.
+  </p>
+</div>
+
+<hr class="divider"/>
+
+<!-- PROCESS -->
+<section id="process">
+  <p class="sec-label reveal">How it works</p>
+  <h2 class="reveal">From first contact to<br><em>first layout</em> in weeks</h2>
+  <div class="steps-row reveal">
+    <div class="step">
+      <div class="step-circle">01</div>
+      <h4>Scope &amp; Match</h4>
+      <p>Share your process node, design type, and timeline. We match you with engineers who have direct domain experience.</p>
+    </div>
+    <div class="step">
+      <div class="step-circle">02</div>
+      <h4>Sign MSA &amp; SOW</h4>
+      <p>Standard US contract — IP assignment, NDA, and T&amp;M billing. Net-30 invoicing based on monthly timesheets.</p>
+    </div>
+    <div class="step">
+      <div class="step-circle">03</div>
+      <h4>VDI Onboarding</h4>
+      <p>Your IT provisions VDI access. Engineers connect securely and begin work in your EDA environment immediately.</p>
+    </div>
+    <div class="step">
+      <div class="step-circle">04</div>
+      <h4>Deliver &amp; Iterate</h4>
+      <p>Weekly progress reports, bi-weekly syncs. DRC/LVS-clean layout blocks delivered through tape-out completion.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-grid">
+    <div class="contact-info">
+      <p class="sec-label reveal">Get in touch</p>
+      <h2 class="reveal">Let's discuss<br><em>your project</em></h2>
+      <p class="reveal">Tell us your process node, design type, team size, and timeline. We respond within one business day with a proposed engineer profile and rate.</p>
+      <div class="contact-email-link reveal">contact@brightfoundllc.com</div>
+    </div>
+    <form class="reveal" onsubmit="handleSubmit(event)">
+      <div class="frow">
+        <div class="fgroup"><label>First Name</label><input type="text" placeholder="Alex" required/></div>
+        <div class="fgroup"><label>Last Name</label><input type="text" placeholder="Chen" required/></div>
+      </div>
+      <div class="fgroup"><label>Company</label><input type="text" placeholder="Acme Semiconductor Inc." required/></div>
+      <div class="fgroup"><label>Work Email</label><input type="email" placeholder="alex@acmesemi.com" required/></div>
+      <div class="frow">
+        <div class="fgroup">
+          <label>Process Node</label>
+          <select>
+            <option value="">Select node</option>
+            <option>28nm</option><option>40nm</option><option>65nm</option>
+            <option>90nm</option><option>130nm</option><option>180nm</option>
+            <option>350nm or above</option>
+          </select>
+        </div>
+        <div class="fgroup">
+          <label>Design Type</label>
+          <select>
+            <option value="">Select type</option>
+            <option>Analog / Mixed-Signal</option>
+            <option>Digital Backend</option>
+            <option>Full-Chip Integration</option>
+            <option>Not sure yet</option>
+          </select>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>Project Details</label>
+        <textarea placeholder="Describe your layout needs — circuit type, timeline, number of engineers needed, specific tool preferences…"></textarea>
+      </div>
+      <button type="submit" class="btn-submit">
+        Send Request
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div style="display:flex;align-items:center;gap:.55rem">
+    <svg width="26" height="26" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="1" y="7" width="20" height="20" rx="1" stroke="#3DD6C3" stroke-width="1" opacity="0.4"/>
+      <rect x="3"  y="15" width="14" height="10" fill="#E05547" opacity="0.8"/>
+      <rect x="9"  y="10" width="14" height="10" fill="#3DD6C3" opacity="0.7"/>
+      <rect x="15" y="5"  width="14" height="10" fill="#D4974E" opacity="0.85"/>
+      <rect x="15" y="17" width="14" height="6"  fill="#5B99E8" opacity="0.75"/>
+      <rect x="13" y="13" width="3" height="3" fill="#EDD25A" opacity="0.85"/>
+      <rect x="19" y="8"  width="3" height="3" fill="#EDD25A" opacity="0.85"/>
+    </svg>
+    <span style="font-family:var(--ff-head);font-size:1rem;font-weight:700">Bright<span style="color:var(--m1)">found</span> <span style="font-family:var(--ff-mono);font-size:.58rem;letter-spacing:.1em;color:var(--muted)">LLC</span></span>
+  </div>
+  <p>© 2026 Brightfound LLC. All rights reserved.</p>
+  <div class="footer-mono">US-registered · EAR compliant · 28nm+</div>
+</footer>
+
+<script>
+/* ══ GDS CANVAS — IC layout viewer simulation ══════════════ */
+(function(){
+  const canvas = document.getElementById('gds-canvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  // 8-metal BEOL stack: odd layers = vertical routing, even = horizontal
+  // wMin/wMax, hMin/hMax in grid units (G=8px lambda)
+  const LAYERS = [
+    {color:'#E05547', alpha:.52, name:'poly',  wMin:1, wMax:2,  hMin:3,  hMax:10, fillP:.65, isVia:false},
+    {color:'#4CAF50', alpha:.40, name:'od',    wMin:4, wMax:12, hMin:2,  hMax:7,  fillP:.68, isVia:false},
+    {color:'#4488FF', alpha:.62, name:'m1',    wMin:1, wMax:1,  hMin:4,  hMax:18, fillP:.88, isVia:false}, // V fine
+    {color:'#FF44AA', alpha:.52, name:'m2',    wMin:4, wMax:18, hMin:1,  hMax:1,  fillP:.88, isVia:false}, // H fine
+    {color:'#FFB800', alpha:.55, name:'m3',    wMin:1, wMax:2,  hMin:5,  hMax:22, fillP:.78, isVia:false}, // V semi
+    {color:'#00CCDD', alpha:.50, name:'m4',    wMin:5, wMax:22, hMin:1,  hMax:2,  fillP:.78, isVia:false}, // H semi
+    {color:'#FF6600', alpha:.52, name:'m5',    wMin:2, wMax:3,  hMin:7,  hMax:26, fillP:.65, isVia:false}, // V medium
+    {color:'#88DD00', alpha:.48, name:'m6',    wMin:7, wMax:26, hMin:2,  hMax:3,  fillP:.65, isVia:false}, // H medium
+    {color:'#AA44FF', alpha:.50, name:'m7',    wMin:3, wMax:5,  hMin:9,  hMax:34, fillP:.55, isVia:false}, // V wide
+    {color:'#FF5533', alpha:.55, name:'m8',    wMin:9, wMax:34, hMin:3,  hMax:5,  fillP:.55, isVia:false}, // H power
+    {color:'#EDD25A', alpha:.88, name:'via',   wMin:1, wMax:1,  hMin:1,  hMax:1,  fillP:1.0, isVia:true},
+    {color:'#5DC872', alpha:.28, name:'nwell', wMin:9, wMax:24, hMin:5,  hMax:18, fillP:.22, isVia:false},
+  ];
+
+  let W, H, rects=[], offset=0;
+  const G=8; // grid lambda (px)
+
+  function setup(){
+    const box = canvas.parentElement.getBoundingClientRect();
+    W = canvas.width  = Math.round(box.width  * window.devicePixelRatio);
+    H = canvas.height = Math.round(box.height * window.devicePixelRatio);
+    canvas.style.width  = box.width+'px';
+    canvas.style.height = box.height+'px';
+    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    buildRects(box.width, box.height);
+  }
+
+  function buildRects(w, h){
+    rects = [];
+    const cols = Math.ceil(w/G)+6, rows = Math.ceil(h/G)*2+6;
+    const count = Math.floor((w*h)/700);
+
+    for(let i=0; i<count; i++){
+      const L = LAYERS[Math.floor(Math.random()*LAYERS.length)];
+      const rw = (Math.floor(Math.random()*(L.wMax - L.wMin + 1)) + L.wMin) * G;
+      const rh = (Math.floor(Math.random()*(L.hMax - L.hMin + 1)) + L.hMin) * G;
+      rects.push({
+        x: Math.floor(Math.random()*cols)*G,
+        y: Math.floor(Math.random()*rows)*G - h,
+        w: rw, h: rh,
+        color: L.color,
+        alpha: L.alpha*(0.72+Math.random()*.28),
+        filled: Math.random() < L.fillP,
+        isVia: L.isVia,
+      });
+    }
+  }
+
+  function drawFrame(dy){
+    const dpr = window.devicePixelRatio;
+    const vw = W/dpr, vh = H/dpr;
+    ctx.save();
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.clearRect(0,0,W,H);
+    ctx.restore();
+
+    ctx.save();
+    ctx.translate(0, dy % (vh/2));
+
+    for(let pass=0; pass<2; pass++){
+      const yOff = pass*(vh/2);
+      for(const r of rects){
+        ctx.save();
+        ctx.globalAlpha = r.alpha;
+        ctx.fillStyle   = r.color;
+        ctx.strokeStyle = r.color;
+
+        if(r.isVia){
+          ctx.fillRect(r.x, r.y+yOff, 4, 4);
+          ctx.fillRect(r.x, r.y+yOff+vh/2, 4, 4);
+        } else if(r.filled || r.isRoute){
+          ctx.fillRect(r.x, r.y+yOff, r.w, r.h);
+          ctx.globalAlpha = r.alpha*.15;
+          // outline
+          ctx.strokeStyle = r.color;
+          ctx.lineWidth=1;
+          ctx.strokeRect(r.x+.5, r.y+yOff+.5, r.w-1, r.h-1);
+        } else {
+          ctx.lineWidth=1;
+          ctx.strokeRect(r.x+.5, r.y+yOff+.5, r.w-1, r.h-1);
+          ctx.globalAlpha = r.alpha*.18;
+          ctx.fillRect(r.x, r.y+yOff, r.w, r.h);
+        }
+        ctx.restore();
+      }
+    }
+    ctx.restore();
+  }
+
+  let animId;
+  function animate(){
+    offset += .4; // slow pan speed
+    drawFrame(-offset);
+    animId = requestAnimationFrame(animate);
+  }
+
+  setup();
+  animate();
+  window.addEventListener('resize',()=>{setup()});
+})();
+
+/* ══ SCROLL REVEAL ══════════════════════════════════════════ */
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting) return;
+    e.target.classList.add('on');
+    // stagger children if grid
+    [...e.target.children].forEach((c,i)=>{
+      c.style.transitionDelay=i*.06+'s';
+    });
+    // trigger node bars
+    e.target.querySelectorAll('.node-fill').forEach(b=>b.classList.add('on'));
+  });
+},{threshold:.1,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* ══ NAV SCROLL ══════════════════════════════════════════════ */
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').style.background =
+    window.scrollY>40 ? 'rgba(11,22,40,.98)' : 'rgba(11,22,40,.92)';
+});
+
+/* ══ FAQ ACCORDION ══════════════════════════════════════════ */
+function toggleFaq(btn){
+  const item = btn.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+  // Close all
+  document.querySelectorAll('.faq-item.open').forEach(i=>i.classList.remove('open'));
+  // Open clicked if it was closed
+  if(!isOpen) item.classList.add('open');
+}
+
+/* ══ FORM ══════════════════════════════════════════════════ */
+function handleSubmit(e){
+  e.preventDefault();
+  const btn=e.target.querySelector('.btn-submit');
+  btn.textContent="Sent — we'll be in touch!";
+  btn.style.background='var(--active)';
+  btn.disabled=true;
+}
+</script>
+</body>
+</html>
