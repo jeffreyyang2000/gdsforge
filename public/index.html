@@ -77,6 +77,11 @@ nav{
   letter-spacing:.12em;color:var(--muted);vertical-align:middle;
   margin-left:.1rem;
 }
+.logo-tag{
+  font-family:var(--ff-mono);font-size:.5rem;font-weight:400;
+  letter-spacing:.09em;color:var(--muted);margin-top:.15rem;line-height:1;
+  text-transform:uppercase;
+}
 .nav-links{display:flex;gap:2rem;list-style:none}
 .nav-links a{
   font-size:.78rem;font-weight:500;letter-spacing:.1em;
@@ -460,23 +465,26 @@ footer p{font-size:.75rem;color:var(--muted)}
 <!-- NAV -->
 <nav id="nav">
   <a href="#" class="logo-wrap">
-    <!-- IC-layer mark: 4 offset rectangles suggesting stacked metal layers -->
-    <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
-      <!-- n-well outer hint -->
-      <rect x="1" y="7" width="20" height="20" rx="1" stroke="#3DD6C3" stroke-width="1" opacity="0.45"/>
-      <!-- poly layer — bottom-left anchor -->
-      <rect x="3"  y="15" width="14" height="10" fill="#E05547" opacity="0.85"/>
-      <!-- active layer — offset right -->
-      <rect x="9"  y="10" width="14" height="10" fill="#3DD6C3" opacity="0.75"/>
-      <!-- metal-1 — offset up-right -->
-      <rect x="15" y="5"  width="14" height="10" fill="#D4974E" opacity="0.90"/>
-      <!-- metal-2 top bar — creates implied "B" counter shape -->
-      <rect x="15" y="17" width="14" height="6"  fill="#5B99E8" opacity="0.80"/>
-      <!-- via dots -->
-      <rect x="13" y="13" width="3" height="3" fill="#EDD25A" opacity="0.9"/>
-      <rect x="19" y="8"  width="3" height="3" fill="#EDD25A" opacity="0.9"/>
+    <!-- GDS Forge logo: stacked IC metal layers cross-section -->
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+      <rect x="1" y="1" width="34" height="34" rx="5" fill="#0F1E35" stroke="#4488FF" stroke-width="1.2" opacity="0.75"/>
+      <!-- M1 — blue -->
+      <rect x="5" y="25" width="26" height="4" rx="1.2" fill="#4488FF" opacity="0.95"/>
+      <!-- M2 — magenta -->
+      <rect x="5" y="19" width="18" height="4" rx="1.2" fill="#FF44AA" opacity="0.88"/>
+      <!-- M3 — amber -->
+      <rect x="5" y="13" width="22" height="4" rx="1.2" fill="#FFB800" opacity="0.88"/>
+      <!-- M4 — cyan -->
+      <rect x="5" y="7"  width="14" height="4" rx="1.2" fill="#00CCDD" opacity="0.88"/>
+      <!-- Vias -->
+      <rect x="16" y="22" width="3" height="3" rx=".5" fill="#EDD25A" opacity="0.95"/>
+      <rect x="23" y="16" width="3" height="3" rx=".5" fill="#EDD25A" opacity="0.95"/>
+      <rect x="12" y="10" width="3" height="3" rx=".5" fill="#EDD25A" opacity="0.95"/>
     </svg>
-    <span class="logo-text">Bright<em>found</em> <span class="logo-llc">LLC</span></span>
+    <div>
+      <div class="logo-text">GDS<em>forge</em></div>
+      <div class="logo-tag">Expert IC Layout, On Demand</div>
+    </div>
   </a>
   <ul class="nav-links">
     <li><a href="#services">Services</a></li>
