@@ -516,10 +516,10 @@ footer p{font-size:.75rem;color:var(--muted)}
           <div class="gds-dots">
             <span></span><span></span><span></span>
           </div>
-          <span class="gds-title">layout_top.gds — TSMC 55nm</span>
+          <span class="gds-title">layout_top.gds — Virtuoso Layout Editor</span>
         </div>
         <div class="gds-body">
-          <img src="/images/ALL.jpg" alt="IC layout — TSMC 55nm" style="width:100%;height:100%;object-fit:cover;display:block;"/>
+          <canvas id="gds-canvas"></canvas>
         </div>
       </div>
       <div class="layer-legend" style="margin-top:1rem">
@@ -531,6 +531,8 @@ footer p{font-size:.75rem;color:var(--muted)}
         <div class="ll-item"><div class="ll-dot" style="background:var(--m4)"></div>M4</div>
         <div class="ll-item"><div class="ll-dot" style="background:var(--m5)"></div>M5</div>
         <div class="ll-item"><div class="ll-dot" style="background:var(--m6)"></div>M6</div>
+        <div class="ll-item"><div class="ll-dot" style="background:var(--m7)"></div>M7</div>
+        <div class="ll-item"><div class="ll-dot" style="background:var(--m8)"></div>M8</div>
         <div class="ll-item"><div class="ll-dot" style="background:var(--via)"></div>Via</div>
         <div class="ll-item"><div class="ll-dot" style="background:var(--nwell)"></div>N-Well</div>
       </div>
@@ -674,8 +676,9 @@ footer p{font-size:.75rem;color:var(--muted)}
 
     <!-- Chip floorplan visual -->
     <div class="nodes-visual reveal">
-      <div class="nodes-visual-title">layout_top.gds — 8-Metal + L/C/R Passives (TSMC 28nm HPC)</div>
-      <svg viewBox="0 0 560 500" xmlns="http://www.w3.org/2000/svg">
+      <div class="nodes-visual-title">layout_top.gds — 6-Metal (TSMC 55nm)</div>
+      <img src="/images/ALL.jpg" alt="IC layout — TSMC 55nm 6 metal layers" style="width:100%;display:block;object-fit:cover;"/>
+      <svg viewBox="0 0 560 500" xmlns="http://www.w3.org/2000/svg" style="display:none">
         <defs>
           <pattern id="p-od"     width="8"  height="5"  patternUnits="userSpaceOnUse"><rect x="0" y="1" width="5" height="3" fill="#4CAF50" opacity=".65"/></pattern>
           <pattern id="p-poly"   width="5"  height="1"  patternUnits="userSpaceOnUse"><rect width="1.2" height="1" fill="#E05547"/></pattern>
